@@ -1,3 +1,5 @@
+##--- This is not the main engine branch! This is a heavily OpenGL reliant implementation that has been deprecated. ---
+
 # SDL 2D Engine in C
 This is a simple 2D engine written in C using the SDL Library + OpenGL that I plan to use for a project
 later. I don't plan to add significant support for things such as textures
