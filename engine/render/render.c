@@ -8,7 +8,7 @@ static Render_State_Internal state = {0};
 void render_init(void) {
     SDL_Init(SDL_INIT_VIDEO);
     global.render.width = 800;
-    global.render.height = 640;
+    global.render.height = 224;
     initialize_SDL("Engine", global.render.width, global.render.height);
     initialize_bitmap();
 }

@@ -5,8 +5,11 @@ and normal maps as the project that necessitates this only needs the ability for
 to be drawn to the screen and for sound to be played efficiently.
 
 ## Completed Portions
-- Most of the boilerplate code and it can render simple sets of verticies to the screen
-
+- Most of the boilerplate code and it can render simple sets of vertices to the screen
+- Can render individual pixels to screen in a bitmap graphics mode efficiently.
 ## In Progress
 - Need to add Sound Support.
-- Need to add routines to draw individual pixels efficiently to the screen.
+
+### Example Screenshots
+1. Bitmap graphics example
+![alt text](bitmapexample1.png?raw=true)
