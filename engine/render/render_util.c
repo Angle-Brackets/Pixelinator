@@ -5,6 +5,10 @@
 #include "../io/io.h"
 #include "render_internal.h"
 
+/**
+ * Potentially Deprecated.
+ * @deprecated
+ */
 u32 render_shader_create(const char* path_vert, const char* path_frag){
     int success;
     char log[512];
