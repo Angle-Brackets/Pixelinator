@@ -36,5 +36,6 @@ void initialize_bitmap();
 
 //Global texture used for drawing bitmap graphics
 extern SDL_Texture* bitmap;
+extern bool bitmap_initialized;
 
 #endif //SDLCENGINE_PIXEL_H

@@ -5,12 +5,15 @@
 
 static Render_State_Internal state = {0};
 
-void render_init(void) {
+void render_init(enum render_flags flags) {
     SDL_Init(SDL_INIT_VIDEO);
     global.render.width = 800;
-    global.render.height = 224;
+    global.render.height = 512;
     initialize_SDL("Engine", global.render.width, global.render.height);
-    initialize_bitmap();
+
+    if(flags & BITMAP_ACTIVE){
+        initialize_bitmap();
+    }
 }
 
 void render_begin(void){
@@ -19,8 +22,10 @@ void render_begin(void){
 
 void render_end(void){
     //Updates bitmap and writes it to a texture.
-    draw_pixel_buffer();
-    SDL_RenderCopy(global.render.renderer, bitmap, NULL, NULL);
+    if(bitmap_initialized) {
+        draw_pixel_buffer();
+        SDL_RenderCopy(global.render.renderer, bitmap, NULL, NULL);
+    }
 
     SDL_RenderPresent(global.render.renderer);
 }

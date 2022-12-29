@@ -26,12 +26,12 @@ static void input_handle(void) {
 }
 
 int main() {
-    time_init(60);
+    time_init(200);
     config_init();
-    render_init();
+    render_init(BITMAP_ACTIVE);
 
     running = true;
-    SDL_Color c = {98, 3, 252, 0};
+    SDL_Color c = {0, 0, 255, 0};
     while(running){
         time_update();
         SDL_Event event;
@@ -51,18 +51,20 @@ int main() {
         input_handle();
 
         //Draw Elements
+
         for(int i = 0; i < global.render.height; i++){
             for(int j = 0; j < global.render.width; j++){
                 draw_pixel(&c, j, i);
             }
+            c.b -= 1 * (i % 2);
         }
 
         //End frame
         render_end();
         time_update_late();
 
-        static char buffer[12];
-        snprintf(buffer, 12, "Engine - %u", global.time.frame_rate);
+        static char buffer[16];
+        snprintf(buffer, 16, "Engine - %u", global.time.frame_rate);
         SDL_SetWindowTitle(global.render.window, buffer);
     }
 

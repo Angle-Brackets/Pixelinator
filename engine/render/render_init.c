@@ -8,7 +8,7 @@
 #include "../draw/pixel.h"
 
 void initialize_SDL(const char* name, u32 width, u32 height){
-    int result = SDL_CreateWindowAndRenderer(width, height, 0, &global.render.window, &global.render.renderer);
+    int result = SDL_CreateWindowAndRenderer(width, height, SDL_WINDOW_RESIZABLE, &global.render.window, &global.render.renderer);
 
     if(result != 0){
         ERROR_EXIT("Failed to initialize window and renderer.\n")
