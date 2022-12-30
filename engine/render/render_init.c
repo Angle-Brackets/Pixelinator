@@ -5,7 +5,7 @@
 #include "../global.h"
 #include "render.h"
 #include "render_internal.h"
-#include "../draw/pixel.h"
+#include "../draw/bitmap.h"
 
 void initialize_SDL(const char* name, u32 width, u32 height){
     int result = SDL_CreateWindowAndRenderer(width, height, SDL_WINDOW_RESIZABLE, &global.render.window, &global.render.renderer);

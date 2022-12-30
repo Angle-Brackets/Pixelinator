@@ -1,19 +1,18 @@
 #include "render.h"
 #include "../global.h"
 #include "render_internal.h"
-#include "../draw/pixel.h"
+#include "../draw/bitmap.h"
 
 static Render_State_Internal state = {0};
 
-void render_init(enum render_flags flags) {
+void render_init(u32 width, u32 height, Render_Flags flags) {
     SDL_Init(SDL_INIT_VIDEO);
-    global.render.width = 800;
-    global.render.height = 512;
+    global.render.width = width;
+    global.render.height = height;
     initialize_SDL("Engine", global.render.width, global.render.height);
 
-    if(flags & BITMAP_ACTIVE){
-        initialize_bitmap();
-    }
+    //Set flags
+    global.render_flags = flags;
 }
 
 void render_begin(void){

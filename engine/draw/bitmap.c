@@ -2,13 +2,13 @@
 #include <string.h>
 #include "../util.h"
 #include "../global.h"
-#include "pixel.h"
+#include "bitmap.h"
 
-//2D array that is bitmap_initialized to be a 2D matrix of pixels that is HEIGHT, WIDTH (rows and cols)
+//2D array that is initialized to be a 2D matrix of pixels that is HEIGHT, WIDTH (rows and cols)
 static SDL_Color** pixel_buffer = NULL;
 //Bitmap for drawing pixels to screen
 SDL_Texture* bitmap = NULL;
-//Field to tell if we're using bitmap graphics
+//Field to tell if we've initialized bitmap graphics
 bool bitmap_initialized = false;
 
 void set_fill_color(SDL_Color* color){
@@ -32,11 +32,12 @@ static i32 clamp(i32 value, i32 min, i32 max){
 
 void draw_pixel(SDL_Color* color, i32 x, i32 y){
     if(pixel_buffer == NULL){
-        ERROR_EXIT("Pixel Buffer not bitmap_initialized, run initialize_bitmap() before any draw calls!")
+        ERROR_EXIT("Pixel Buffer not initialized, run initialize_bitmap() before any draw calls!")
     }
 
-    x = clamp(x, 0, global.render.width);
-    y = clamp(y, 0, global.render.height);
+    //Will clamp to appropriate x,y.
+    x = clamp(x, 0, global.bitmap.width);
+    y = clamp(y, 0, global.bitmap.height);
 
     //Update the pixel buffer, this does not draw to the screen just yet, we use draw_pixel_buffer() to do that.
     if(color != NULL){
@@ -51,14 +52,25 @@ void draw_pixel(SDL_Color* color, i32 x, i32 y){
     }
 }
 
-void initialize_bitmap(){
+void initialize_bitmap(u32 width, u32 height){
     if(!bitmap_initialized) {
-        if ((pixel_buffer = (SDL_Color**)calloc(global.render.height, sizeof(SDL_Color*))) == NULL) {
+        Bitmap_State bmp;
+        bmp.width = global.render.width;
+        bmp.height = global.render.height;
+
+        if(width > 0)
+            bmp.width = width;
+        if(height > 0)
+            bmp.height = height;
+
+        global.bitmap = bmp; //Copies the bitmap state information to global
+
+        if ((pixel_buffer = (SDL_Color**)calloc(global.bitmap.height, sizeof(SDL_Color*))) == NULL) {
             ERROR_EXIT("Failed to initialize pixel buffer rows.\n")
         }
 
-        for (int i = 0; i < global.render.height; i++) {
-            pixel_buffer[i] = (SDL_Color*)calloc(global.render.width, sizeof(SDL_Color));
+        for (int i = 0; i < global.bitmap.height; i++) {
+            pixel_buffer[i] = (SDL_Color*)calloc(global.bitmap.width, sizeof(SDL_Color));
 
             if (pixel_buffer[i] == NULL) {
                 ERROR_EXIT("Failed to initialize pixel buffer columns.\n")
@@ -90,9 +102,11 @@ void draw_pixel_buffer(){
 
     //The reason why we need to update all the pixels is that it is not a safe assumption to say that
     //the read in pixels are going to be bitmap_initialized with the current screen colors, SDL does not guarantee this!
-    for(int i = 0; i < global.render.height; i++){
+
+    //u32 rather than SDL_Color is used because the texture interprets the bits as colors correctly.
+    for(int i = 0; i < global.bitmap.height; i++){
         current_row = (u32*)((u8*)pixels + i * pitch);
-        for(int j = 0; j < global.render.width; j++){
+        for(int j = 0; j < global.bitmap.width; j++){
             current_row[j] = SDL_MapRGBA(format,
                                          pixel_buffer[i][j].r,
                                          pixel_buffer[i][j].g,

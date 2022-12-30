@@ -5,8 +5,10 @@
 #include "engine/global.h"
 #include "engine/config/config.h"
 #include "engine/input/input.h"
-#include "engine/draw/pixel.h"
+#include "engine/draw/bitmap.h"
 #define SDL_MAIN_HANDLED
+#define WIDTH 800
+#define HEIGHT 512
 
 static bool running = false;
 static vec2 pos;
@@ -28,10 +30,11 @@ static void input_handle(void) {
 int main() {
     time_init(200);
     config_init();
-    render_init(BITMAP_ACTIVE);
+    render_init(WIDTH, HEIGHT, BITMAP_ACTIVE);
+    initialize_bitmap(224, 256);
 
     running = true;
-    SDL_Color c = {0, 0, 255, 0};
+    SDL_Color blue = {0, 0, 255, 0};
     while(running){
         time_update();
         SDL_Event event;
@@ -51,20 +54,18 @@ int main() {
         input_handle();
 
         //Draw Elements
-
-        for(int i = 0; i < global.render.height; i++){
-            for(int j = 0; j < global.render.width; j++){
-                draw_pixel(&c, j, i);
+        for(int i = 0; i < global.bitmap.height; i++){
+            for(int j = 0; j < global.bitmap.width; j++){
+                draw_pixel(&blue, j, i);
             }
-            c.b -= 1 * (i % 2);
         }
 
         //End frame
         render_end();
         time_update_late();
 
-        static char buffer[16];
-        snprintf(buffer, 16, "Engine - %u", global.time.frame_rate);
+        static char buffer[20];
+        snprintf(buffer, 20, "Engine - %u", global.time.frame_rate);
         SDL_SetWindowTitle(global.render.window, buffer);
     }
 

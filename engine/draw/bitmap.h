@@ -1,10 +1,14 @@
-#ifndef SDLCENGINE_PIXEL_H
-#define SDLCENGINE_PIXEL_H
+#ifndef SDLCENGINE_BITMAP_H
+#define SDLCENGINE_BITMAP_H
 
 #include <SDL2/SDL.h>
 #include <stdbool.h>
-#include "../global.h"
 #include "../types.h"
+
+typedef struct bitmap_state {
+    u32 width;
+    u32 height;
+} Bitmap_State;
 
 /**
  * Sets the fill color of the pixel's being currently drawn
@@ -31,11 +35,13 @@ void draw_pixel_buffer();
 /**
  * DO NOT USE MORE THAN ONCE!
  * Initializes pixel buffer used for drawing bitmap graphics
+ * @param width Width of bitmap in pixels
+ * @param height Height of bitmap in pixels
  */
-void initialize_bitmap();
+void initialize_bitmap(u32 width, u32 height);
 
 //Global texture used for drawing bitmap graphics
 extern SDL_Texture* bitmap;
 extern bool bitmap_initialized;
 
-#endif //SDLCENGINE_PIXEL_H
+#endif //SDLCENGINE_BITMAP_H
