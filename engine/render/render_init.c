@@ -1,11 +1,9 @@
-#include <glad.h>
 #include <SDL2/SDL.h>
 
 #include "../util.h"
 #include "../global.h"
 #include "render.h"
 #include "render_internal.h"
-#include "../draw/bitmap.h"
 
 void initialize_SDL(const char* name, u32 width, u32 height){
     int result = SDL_CreateWindowAndRenderer(width, height, SDL_WINDOW_RESIZABLE, &global.render.window, &global.render.renderer);
@@ -20,6 +18,7 @@ void initialize_SDL(const char* name, u32 width, u32 height){
 
     struct SDL_RendererInfo info;
     SDL_GetRendererInfo(global.render.renderer, &info);
+
     printf("OpenGL Loaded\n");
     printf("Renderer: %s\n", info.name);
 }

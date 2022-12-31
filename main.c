@@ -6,8 +6,9 @@
 #include "engine/config/config.h"
 #include "engine/input/input.h"
 #include "engine/draw/bitmap.h"
+
 #define SDL_MAIN_HANDLED
-#define WIDTH 800
+#define WIDTH 512
 #define HEIGHT 512
 
 static bool running = false;
@@ -31,23 +32,33 @@ int main() {
     time_init(200);
     config_init();
     render_init(WIDTH, HEIGHT, BITMAP_ACTIVE);
-    initialize_bitmap(224, 256);
+    initialize_bitmap(256, 256);
 
     running = true;
     SDL_Color blue = {0, 0, 255, 0};
+    SDL_Color red = {255, 0, 0, 0};
     while(running){
         time_update();
         SDL_Event event;
 
+        //This might be moved to be an event.h/event.c file FOR EVERY event to be polled.
         while(SDL_PollEvent(&event)){
             switch(event.type){
                 case SDL_QUIT:
                     running = false;
                     break;
+                case SDL_WINDOWEVENT:
+                    switch(event.window.event){
+                        case SDL_WINDOWEVENT_SIZE_CHANGED:
+                            global.render.width = event.window.data1;
+                            global.render.height = event.window.data2;
+                            break;
+                    }
                 default:
                     break;
             }
         }
+
         //Start render pass
         render_begin();
         input_update();
@@ -58,6 +69,7 @@ int main() {
             for(int j = 0; j < global.bitmap.width; j++){
                 draw_pixel(&blue, j, i);
             }
+            blue.b -= 1;
         }
 
         //End frame
