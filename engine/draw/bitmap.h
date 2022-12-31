@@ -9,7 +9,6 @@ typedef struct bitmap_state {
     u32 width;
     u32 height;
 } Bitmap_State;
-
 /**
  * Sets the fill color of the pixel's being currently drawn
  * @param red

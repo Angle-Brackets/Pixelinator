@@ -34,20 +34,12 @@ void draw_pixel(SDL_Color* color, i32 x, i32 y){
         ERROR_EXIT("Pixel Buffer not initialized, run initialize_bitmap() before any draw calls!")
     }
 
-    //Will clamp to appropriate x,y.
-    x = clamp(x, 0, global.bitmap.width);
-    y = clamp(y, 0, global.bitmap.height);
+    if(x < 0 || x > global.bitmap.width || y < 0 || y > global.bitmap.height)
+        return;
 
     //Update the pixel buffer, this does not draw to the screen just yet, we use draw_pixel_buffer() to do that.
-    if(color != NULL){
-        pixel_buffer[y][x].r = color->r;
-        pixel_buffer[y][x].g = color->g;
-        pixel_buffer[y][x].b = color->b;
-        pixel_buffer[y][x].a = color->a;
-    }
-    else{
-        //If it is NULL it is just set to zero.
-        memset(pixel_buffer, 0, sizeof(SDL_Color));
+    if(color != NULL && *(u32*)&pixel_buffer[y][x] != *(u32*)color){
+        pixel_buffer[y][x] = *color;
     }
 }
 
@@ -84,7 +76,7 @@ void initialize_bitmap(u32 width, u32 height){
         bitmap = SDL_CreateTexture(global.render.renderer, SDL_PIXELFORMAT_RGBA32, SDL_TEXTUREACCESS_STREAMING, global.bitmap.width * bitmap_scale_x, global.bitmap.height * bitmap_scale_y);
 
         if(bitmap == NULL){
-            ERROR_EXIT("Failed to initialize bitmap matrix.\n")
+            ERROR_EXIT("Failed to initialize bitmap matrix (Your window size might be too small).\n")
         }
 
         bitmap_initialized = true;
@@ -117,6 +109,7 @@ void draw_pixel_buffer(){
     //the read in pixels are going to be bitmap_initialized with the current screen colors, SDL does not guarantee this!
 
     //u32 rather than SDL_Color is used because the texture interprets the bits as colors correctly.
+    //This scaling is using a Kronecker's Product between our bitmap matrix and our rescaled matrix that is scale_x and scale_y larger.
     for(int i = 0; i < global.bitmap.height; i++){
         for(int j = 0; j < global.bitmap.width; j++){
             u32 color = SDL_MapRGBA(format,

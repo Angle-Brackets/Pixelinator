@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdbool.h>
 #include <SDL2/SDL.h>
+#include <math.h>
 #include "engine/time.h"
 #include "engine/global.h"
 #include "engine/config/config.h"
@@ -8,8 +9,8 @@
 #include "engine/draw/bitmap.h"
 
 #define SDL_MAIN_HANDLED
-#define WIDTH 512
-#define HEIGHT 512
+#define WIDTH 800
+#define HEIGHT 256
 
 static bool running = false;
 static vec2 pos;
@@ -29,14 +30,14 @@ static void input_handle(void) {
 }
 
 int main() {
-    time_init(200);
+    time_init(120);
     config_init();
     render_init(WIDTH, HEIGHT, BITMAP_ACTIVE);
-    initialize_bitmap(256, 256);
+    initialize_bitmap(800, 256);
 
     running = true;
-    SDL_Color blue = {0, 0, 255, 0};
-    SDL_Color red = {255, 0, 0, 0};
+    SDL_Color A = {0, 0, 0, 0};
+    SDL_Color B = {255, 255, 255, 0};
     while(running){
         time_update();
         SDL_Event event;
@@ -67,9 +68,10 @@ int main() {
         //Draw Elements
         for(int i = 0; i < global.bitmap.height; i++){
             for(int j = 0; j < global.bitmap.width; j++){
-                draw_pixel(&blue, j, i);
+                //draw_pixel(arc4random() % 2 ? &A : &B, j, i);
+                draw_pixel(&B, j, i);
             }
-            blue.b -= 1;
+            B.r--;
         }
 
         //End frame
