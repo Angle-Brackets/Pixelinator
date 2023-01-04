@@ -31,6 +31,7 @@ void* update_pixels(void* args){
 void process_pixels(void* pixels, SDL_Color** color_data, SDL_PixelFormat* format, u32 bitmap_width, u32 bitmap_height, u32 pitch, u32 scale_x, u32 scale_y){
     //This has to be malloc as opposed to a SAA because the SAA variables might get reused, which is bad behavior for threading.
     struct pixel_args** all_arguments = (struct pixel_args**)malloc(sizeof(struct pixel_args*) * THREADS);
+    VERIFY_HEAP_DATA(all_arguments)
     bmp_scale_x = scale_x;
     bmp_scale_y = scale_y;
     u32 rows_per_thread = bitmap_height / THREADS; //NUMBER OF BITMAP PIXELS FOR EACH THREAD TO MAP TO TEXTURE
@@ -91,11 +92,10 @@ void process_pixels(void* pixels, SDL_Color** color_data, SDL_PixelFormat* forma
 
     //Free up memory!
     for(int i = 0; i < THREADS; i++){
-        free(all_arguments[i]->pixel_rows);
-        free(all_arguments[i]->new_pixel_data);
-        free(all_arguments[i]);
-
-        all_arguments[i] = NULL;
+        CLEAR_FREE(all_arguments[i]->pixel_rows)
+        CLEAR_FREE(all_arguments[i]->new_pixel_data)
+        CLEAR_FREE(all_arguments[i])
     }
 
+    CLEAR_FREE(all_arguments)
 }

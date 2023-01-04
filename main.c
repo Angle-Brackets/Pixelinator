@@ -75,7 +75,6 @@ int main() {
             }
             B.r--;
         }
-
         //End frame
         render_end();
         time_update_late();

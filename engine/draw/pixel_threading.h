@@ -9,7 +9,8 @@
 #include "util.h"
 
 #define THREADS 8
-#define VERIFY_HEAP_DATA(pointer) { if(pointer == NULL){fprintf(stderr, "Ran out of memory.\n"); exit(1);} }
+#define VERIFY_HEAP_DATA(pointer) { if(pointer == NULL){fprintf(stderr, "Ran out of memory.\n"); exit(1);} } //Checks if heap memory is not NULL
+#define CLEAR_FREE(pointer) { if(pointer == NULL){fprintf(stderr, "Warning: Attempted to free NULL pointer.\n");} else{free(pointer); pointer = NULL;} } //Clears heap allocated memory and sets the given pointer to NULL
 
 struct pixel_args {
     u32** pixel_rows; //Pixel rows to write to

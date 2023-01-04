@@ -10,7 +10,7 @@ void render_init(u32 width, u32 height, Render_Flags flags) {
     global.render.height = height;
     initialize_SDL("Engine", global.render.width, global.render.height);
     //Makes the interpolation the nicest it can be.
-    SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, "0");
+    SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, "2");
     //Set flags
     global.render_flags = flags;
 }
