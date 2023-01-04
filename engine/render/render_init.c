@@ -19,7 +19,6 @@ void initialize_SDL(const char* name, u32 width, u32 height){
     struct SDL_RendererInfo info;
     SDL_GetRendererInfo(global.render.renderer, &info);
 
-    printf("OpenGL Loaded\n");
-    printf("Renderer: %s\n", info.name);
+    printf("%s Renderer Loaded\n", info.name);
 }
 

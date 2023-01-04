@@ -1,7 +1,6 @@
 #include "render.h"
 #include "../global.h"
 #include "render_internal.h"
-#include "../draw/bitmap.h"
 
 static Render_State_Internal state = {0};
 

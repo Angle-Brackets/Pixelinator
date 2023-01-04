@@ -32,12 +32,13 @@ static void input_handle(void) {
 int main() {
     time_init(120);
     config_init();
-    render_init(WIDTH, HEIGHT, BITMAP_ACTIVE);
+    render_init(WIDTH, HEIGHT, BITMAP_ACTIVE | MULTITHREADING_ENABLED);
     initialize_bitmap(800, 256);
 
     running = true;
     SDL_Color A = {0, 0, 0, 0};
     SDL_Color B = {255, 255, 255, 0};
+
     while(running){
         time_update();
         SDL_Event event;
@@ -70,6 +71,7 @@ int main() {
             for(int j = 0; j < global.bitmap.width; j++){
                 //draw_pixel(arc4random() % 2 ? &A : &B, j, i);
                 draw_pixel(&B, j, i);
+                //draw_pixel(i % 2 ? &A : &B, j, i);
             }
             B.r--;
         }

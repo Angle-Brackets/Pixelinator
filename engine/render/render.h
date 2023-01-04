@@ -9,7 +9,7 @@
 //Could also be stored in a union, but this is more flexible.
 typedef enum render_flags {
     BITMAP_ACTIVE = 0x1, //Flag to set the bitmap to be activated.
-    UNUSED_1 = 0x1 << 1,
+    MULTITHREADING_ENABLED = 0x1 << 1, //Flag to enable multithreading
     UNUSED_2 = 0x1 << 2,
     UNUSED_3 = 0x1 << 3,
     UNUSED_4 = 0x1 << 4,

@@ -1,8 +1,8 @@
 #include <SDL2/SDL.h>
-#include <string.h>
 #include "../util.h"
 #include "../global.h"
 #include "bitmap.h"
+#include "pixel_threading.h"
 
 static SDL_Color** pixel_buffer = NULL; //2D array that is initialized to be a 2D matrix of pixels that is HEIGHT, WIDTH (rows and cols)
 static u32 bitmap_scale_x = 1; //Field for appropriately scaling the bitmap to fit the screen width (X values)
@@ -106,25 +106,33 @@ void draw_pixel_buffer(){
     }
 
     //The reason why we need to update all the pixels is that it is not a safe assumption to say that
-    //the read in pixels are going to be bitmap_initialized with the current screen colors, SDL does not guarantee this!
+    //the read in pixels are going to be initialized with the current screen colors, SDL does not guarantee this!
 
     //u32 rather than SDL_Color is used because the texture interprets the bits as colors correctly.
     //This scaling is using a Kronecker's Product between our bitmap matrix and our rescaled matrix that is scale_x and scale_y larger.
-    for(int i = 0; i < global.bitmap.height; i++){
-        for(int j = 0; j < global.bitmap.width; j++){
-            u32 color = SDL_MapRGBA(format,
-                        pixel_buffer[i][j].r,
-                        pixel_buffer[i][j].g,
-                        pixel_buffer[i][j].b,
-                        pixel_buffer[i][j].a);
 
-            for(int y = 0; y < bitmap_scale_y; y++){
-                for(int x = 0; x < bitmap_scale_x; x++){
-                    current_row = (u32*)((u8*)pixels + (i * bitmap_scale_y + y) * pitch);
-                    current_row[j * bitmap_scale_x + x] = color;
+    //Multithreaded version, should basically always be used.
+    if(global.render_flags & MULTITHREADING_ENABLED){
+        process_pixels(pixels, pixel_buffer, format, global.bitmap.width, global.bitmap.height, pitch, bitmap_scale_x, bitmap_scale_y);
+    }
+    else {
+        for (int i = 0; i < global.bitmap.height; i++) {
+            for (int j = 0; j < global.bitmap.width; j++) {
+                u32 color = SDL_MapRGBA(format,
+                                        pixel_buffer[i][j].r,
+                                        pixel_buffer[i][j].g,
+                                        pixel_buffer[i][j].b,
+                                        pixel_buffer[i][j].a);
+
+                //Rescaling the bitmap pixels to fit a larger resolution
+                for (int y = 0; y < bitmap_scale_y; y++) {
+                    current_row = (u32 *) ((u8 *) pixels + (i * bitmap_scale_y + y) * pitch);
+                    for (int x = 0; x < bitmap_scale_x; x++) {
+                        current_row[j * bitmap_scale_x + x] = color;
+                    }
                 }
-            }
 
+            }
         }
     }
 
