@@ -34,12 +34,23 @@ void draw_pixel(SDL_Color* color, i32 x, i32 y){
         ERROR_EXIT("Pixel Buffer not initialized, run initialize_bitmap() before any draw calls!")
     }
 
-    if(x < 0 || x > global.bitmap.width || y < 0 || y > global.bitmap.height)
+    if(x < 0 || x >= global.bitmap.width || y < 0 || y >= global.bitmap.height)
         return;
 
     //Update the pixel buffer, this does not draw to the screen just yet, we use draw_pixel_buffer() to do that.
     if(color != NULL && *(u32*)&pixel_buffer[y][x] != *(u32*)color){
         pixel_buffer[y][x] = *color;
+    }
+}
+
+void draw_pixels_from_surface(SDL_Surface* surface){
+    u32* current_row;
+    //printf("%s\n", SDL_GetPixelFormatName(surface->format->format));
+    for(int y = 0; y < surface->h; y++){
+        current_row = (u32 *)((u8 *) surface->pixels + y * surface->pitch);
+        for(int x = 0; x < surface->w; x++){
+            draw_pixel((SDL_Color*)&current_row[x], x, y);
+        }
     }
 }
 

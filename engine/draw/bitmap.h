@@ -20,11 +20,18 @@ void set_fill_color(SDL_Color* color);
 
 /**
  * Draws a pixel to the screen at the x, y position
- * @param SDL_Color* color
+ * @param color
  * @param x
  * @param y
  */
 void draw_pixel(SDL_Color* color, i32 x, i32 y);
+
+/**
+ * Draw pixels from a given texture into the bitmap
+ * Does not necessarily clear the entire bitmap if the width and height of the texture aren't the same as the Bitmap!
+ * @param surface
+ */
+void draw_pixels_from_surface(SDL_Surface* surface);
 
 /**
  * Draws the pixel buffer stored in memory to a bitmap texture.
