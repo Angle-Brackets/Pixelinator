@@ -105,17 +105,21 @@ void set_volume(u8 percentage){
 }
 
 u8 play_music(u32 index){
-    if(Mix_PlayingMusic() == 0){
+    if(index >= 0 && index < music_size && Mix_PlayingMusic() == 0){
         Mix_Volume(1, global.sound.volume);
         Mix_PlayMusic(music[index], 0); //TODO: Implement looping here?
+        return 0;
     }
-    return 0;
+    return 1;
 }
 
 u8 play_sfx(u32 index){
-    Mix_Volume(-1, global.sound.volume);
-    Mix_PlayChannel(-1, sfx[index], 0);
-    return 0;
+    if(index >= 0 && index < music_size) {
+        Mix_Volume(-1, global.sound.volume);
+        Mix_PlayChannel(-1, sfx[index], 0);
+        return 0;
+    }
+    return 1;
 }
 
 void free_music(u32 index){

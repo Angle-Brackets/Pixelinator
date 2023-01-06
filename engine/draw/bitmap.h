@@ -8,6 +8,7 @@
 typedef struct bitmap_state {
     u32 width;
     u32 height;
+    SDL_Color tint;
 } Bitmap_State;
 /**
  * Sets the fill color of the pixel's being currently drawn
@@ -37,6 +38,12 @@ void draw_pixels_from_surface(SDL_Surface* surface);
  * Draws the pixel buffer stored in memory to a bitmap texture.
  */
 void draw_pixel_buffer();
+
+/**
+ * Sets the tint of the bitmap (multiplies the rgb values against the bitmap texture before rendering)
+ * Default is 255,255,255, or white (no tint).
+ */
+void set_bitmap_tint(u8 r, u8 g, u8 b);
 
 /**
  * DO NOT USE MORE THAN ONCE!

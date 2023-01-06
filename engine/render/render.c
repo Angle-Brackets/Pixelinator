@@ -23,6 +23,7 @@ void render_end(void){
     //Updates bitmap and writes it to a texture.
     if(bitmap_initialized) {
         draw_pixel_buffer();
+        SDL_SetTextureColorMod(bitmap, global.bitmap.tint.r, global.bitmap.tint.g, global.bitmap.tint.b);
         SDL_RenderCopy(global.render.renderer, bitmap, NULL, NULL);
     }
 

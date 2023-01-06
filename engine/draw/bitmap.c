@@ -21,6 +21,12 @@ void set_fill_color(SDL_Color* color){
     }
 }
 
+void set_bitmap_tint(u8 r, u8 g, u8 b){
+    global.bitmap.tint.r = r;
+    global.bitmap.tint.g = g;
+    global.bitmap.tint.b = b;
+}
+
 static i32 clamp(i32 value, i32 min, i32 max){
     if(value < min)
         value = min;
@@ -45,7 +51,7 @@ void draw_pixel(SDL_Color* color, i32 x, i32 y){
 
 void draw_pixels_from_surface(SDL_Surface* surface){
     u32* current_row;
-    //printf("%s\n", SDL_GetPixelFormatName(surface->format->format));
+
     for(int y = 0; y < surface->h; y++){
         current_row = (u32 *)((u8 *) surface->pixels + y * surface->pitch);
         for(int x = 0; x < surface->w; x++){
@@ -59,6 +65,10 @@ void initialize_bitmap(u32 width, u32 height){
         Bitmap_State bmp;
         bmp.width = global.render.width;
         bmp.height = global.render.height;
+
+        bmp.tint.r = 255;
+        bmp.tint.g = 255;
+        bmp.tint.b = 255;
 
         if(width > 0)
             bmp.width = width;
