@@ -4,7 +4,7 @@
 #include "render/render.h"
 #include "config/config.h"
 #include "input/input.h"
-#include "draw/bitmap.h"
+#include "graphics/bitmap/bitmap.h"
 #include "audio/sound.h"
 #include "time.h"
 

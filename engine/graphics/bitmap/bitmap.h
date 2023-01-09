@@ -1,23 +1,34 @@
 #ifndef SDLCENGINE_BITMAP_H
 #define SDLCENGINE_BITMAP_H
 
-#include <SDL2/SDL.h>
+#include <SDL.h>
 #include <stdbool.h>
-#include "../types.h"
+#include "../../types.h"
 
 typedef struct bitmap_state {
     u32 width;
     u32 height;
     SDL_Color tint;
+    SDL_Color stroke_fill;
+    SDL_Color shape_fill;
 } Bitmap_State;
 /**
  * Sets the fill color of the pixel's being currently drawn
- * @param red
- * @param green
- * @param blue
- * @param alpha
+ * @param color
  */
-void set_fill_color(SDL_Color* color);
+void set_background_fill(SDL_Color* color);
+
+/**
+ * Sets the outline color for the edge of bitmap shapes drawn
+ * @param color
+ */
+void set_stroke_fill(SDL_Color* color);
+
+/**
+ * Sets the inner fill color of bitmap shapes drawn.
+ * @param color
+ */
+void set_shape_fill(SDL_Color* color);
 
 /**
  * Draws a pixel to the screen at the x, y position
@@ -42,8 +53,9 @@ void draw_pixel_buffer();
 /**
  * Sets the tint of the bitmap (multiplies the rgb values against the bitmap texture before rendering)
  * Default is 255,255,255, or white (no tint).
+ * @param color
  */
-void set_bitmap_tint(u8 r, u8 g, u8 b);
+void set_bitmap_tint(SDL_Color* color);
 
 /**
  * DO NOT USE MORE THAN ONCE!

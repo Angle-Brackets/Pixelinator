@@ -76,7 +76,7 @@ u32 load_sfx(const char* file){
     Mix_Chunk* m = Mix_LoadWAV(file);
 
     if(sfx_size == MAX_STORED_SOUNDS){
-        WARN("Cannot add more music to buffer, try freeing some unused music pieces before allocating more music data!\n")
+        WARN("Cannot add more sfx to buffer, try freeing some unused sfx pieces before allocating more sfx data!\n")
         return 1;
     }
 
@@ -106,6 +106,7 @@ void set_volume(u8 percentage){
 
 u8 play_music(u32 index){
     if(index >= 0 && index < music_size && Mix_PlayingMusic() == 0){
+        Mix_VolumeMusic(global.sound.volume);
         Mix_Volume(1, global.sound.volume);
         Mix_PlayMusic(music[index], 0); //TODO: Implement looping here?
         return 0;

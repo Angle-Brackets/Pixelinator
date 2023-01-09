@@ -1,6 +1,6 @@
-#include <SDL2/SDL.h>
-#include "../util.h"
-#include "../global.h"
+#include <SDL.h>
+#include "../../util.h"
+#include "../../global.h"
 #include "bitmap.h"
 #include "pixel_threading.h"
 
@@ -10,21 +10,33 @@ static u32 bitmap_scale_y = 1; //Field for appropriately scaling the bitmap to f
 SDL_Texture* bitmap = NULL; //Bitmap for drawing pixels to screen
 bool bitmap_initialized = false; //Field to tell if we've initialized bitmap graphics
 
-void set_fill_color(SDL_Color* color){
+void set_background_fill(SDL_Color* color){
     if(color != NULL) {
         if (SDL_SetRenderDrawColor(global.render.renderer, color->r, color->g, color->b, color->a) != 0) {
-            ERROR_EXIT("Failed to set default render draw color.\n")
+            ERROR_EXIT("Failed to set default render graphics color.\n")
         }
     }
     else if(SDL_SetRenderDrawColor(global.render.renderer, 0, 0, 0, 0) != 0) {
-        ERROR_EXIT("Failed to set default render draw color.\n")
+        ERROR_EXIT("Failed to set default render graphics color.\n")
     }
 }
 
-void set_bitmap_tint(u8 r, u8 g, u8 b){
-    global.bitmap.tint.r = r;
-    global.bitmap.tint.g = g;
-    global.bitmap.tint.b = b;
+void set_stroke_fill(SDL_Color* color){
+    global.bitmap.stroke_fill.r = color->r;
+    global.bitmap.stroke_fill.g = color->g;
+    global.bitmap.stroke_fill.b = color->b;
+}
+
+void set_shape_fill(SDL_Color* color){
+    global.bitmap.shape_fill.r = color->r;
+    global.bitmap.shape_fill.g = color->g;
+    global.bitmap.shape_fill.b = color->b;
+}
+
+void set_bitmap_tint(SDL_Color* color){
+    global.bitmap.tint.r = color->r;
+    global.bitmap.tint.g = color->g;
+    global.bitmap.tint.b = color->b;
 }
 
 static i32 clamp(i32 value, i32 min, i32 max){
@@ -37,13 +49,13 @@ static i32 clamp(i32 value, i32 min, i32 max){
 
 void draw_pixel(SDL_Color* color, i32 x, i32 y){
     if(pixel_buffer == NULL){
-        ERROR_EXIT("Pixel Buffer not initialized, run initialize_bitmap() before any draw calls!")
+        ERROR_EXIT("Pixel Buffer not initialized, run initialize_bitmap() before any graphics calls!")
     }
 
     if(x < 0 || x >= global.bitmap.width || y < 0 || y >= global.bitmap.height)
         return;
 
-    //Update the pixel buffer, this does not draw to the screen just yet, we use draw_pixel_buffer() to do that.
+    //Update the pixel buffer, this does not graphics to the screen just yet, we use draw_pixel_buffer() to do that.
     if(color != NULL && *(u32*)&pixel_buffer[y][x] != *(u32*)color){
         pixel_buffer[y][x] = *color;
     }
@@ -69,6 +81,14 @@ void initialize_bitmap(u32 width, u32 height){
         bmp.tint.r = 255;
         bmp.tint.g = 255;
         bmp.tint.b = 255;
+
+        bmp.stroke_fill.r = 0;
+        bmp.stroke_fill.g = 0;
+        bmp.stroke_fill.b = 0;
+
+        bmp.shape_fill.r = 255;
+        bmp.shape_fill.g = 255;
+        bmp.shape_fill.b = 255;
 
         if(width > 0)
             bmp.width = width;
