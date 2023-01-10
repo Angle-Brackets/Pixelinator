@@ -20,7 +20,7 @@ void initialize_SDL(const char* name, u32 width, u32 height, Render_Flags flags)
 
     SDL_SetWindowTitle(global.render.window, name);
     SDL_Color c = {0,0,0,0};
-    set_background_fill(&c);
+    set_background_clear(&c);
 
     struct SDL_RendererInfo info;
     SDL_GetRendererInfo(global.render.renderer, &info);

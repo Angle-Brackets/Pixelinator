@@ -13,10 +13,10 @@ typedef struct bitmap_state {
     SDL_Color shape_fill;
 } Bitmap_State;
 /**
- * Sets the fill color of the pixel's being currently drawn
+ * Sets the clear color (color used after rendering a frame) of the window
  * @param color
  */
-void set_background_fill(SDL_Color* color);
+void set_background_clear(SDL_Color* color);
 
 /**
  * Sets the outline color for the edge of bitmap shapes drawn
@@ -29,6 +29,12 @@ void set_stroke_fill(SDL_Color* color);
  * @param color
  */
 void set_shape_fill(SDL_Color* color);
+
+/**
+ * Fills the screen with a particular color
+ * @param color
+ */
+void fill_background(SDL_Color* color);
 
 /**
  * Draws a pixel to the screen at the x, y position

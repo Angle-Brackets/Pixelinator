@@ -1,16 +1,18 @@
 #include <stdio.h>
 #include <stdbool.h>
 #include <SDL2/SDL.h>
+#include <SDL_image.h>
 #include <math.h>
 #include "engine/time.h"
 #include "engine/global.h"
 #include "engine/config/config.h"
 #include "engine/input/input.h"
-#include "engine/draw/bitmap.h"
+#include "engine/graphics/draw/shapes.h"
+#include "engine/audio/sound.h"
 
 #define SDL_MAIN_HANDLED
-#define WIDTH 800
-#define HEIGHT 256
+#define WIDTH 1440
+#define HEIGHT 900
 
 static bool running = false;
 static vec2 pos;
@@ -33,11 +35,36 @@ int main() {
     time_init(120);
     config_init();
     render_init(WIDTH, HEIGHT, BITMAP_ACTIVE | MULTITHREADING_ENABLED);
-    initialize_bitmap(800, 256);
+    init_mixer(MIX_INIT_MP3, 0);
+    initialize_bitmap(WIDTH,HEIGHT);
 
     running = true;
-    SDL_Color A = {0, 0, 0, 0};
-    SDL_Color B = {255, 255, 255, 0};
+
+    SDL_Color A = {0,0,0,255};
+    SDL_Color B = {255,255,255,0};
+    SDL_Color C = {255,0,0,0};
+
+    struct Circle {
+        u32 x;
+        u32 y;
+        u32 r;
+        vec2 velocity;
+        SDL_Color color;
+    };
+
+    struct Circle circles[100];
+
+    for(i32 i = 0; i < 100; i++){
+        circles[i].r = arc4random() % 100;
+        circles[i].x = arc4random() % WIDTH;
+        circles[i].y = arc4random() % HEIGHT;
+        circles[i].velocity[0] = (arc4random() % 10) + 5;
+        circles[i].velocity[1] = (arc4random() % 10) + 5;
+
+        circles[i].color.r = arc4random() % 255;
+        circles[i].color.g = arc4random() % 255;
+        circles[i].color.b = arc4random() % 255;
+    }
 
     while(running){
         time_update();
@@ -67,14 +94,21 @@ int main() {
         input_handle();
 
         //Draw Elements
-        for(int i = 0; i < global.bitmap.height; i++){
-            for(int j = 0; j < global.bitmap.width; j++){
-                //draw_pixel(arc4random() % 2 ? &A : &B, j, i);
-                draw_pixel(&B, j, i);
-                //draw_pixel(i % 2 ? &A : &B, j, i);
-            }
-            B.r--;
+        fill_background(&B);
+
+        for(i32 i = 0; i < 100; i++){
+            set_shape_fill(&circles[i].color);
+            set_stroke_fill(&circles[i].color);
+            circles[i].x += circles[i].velocity[0];
+            circles[i].y += circles[i].velocity[1];
+
+            if(circles[i].x <= 0 || circles[i].x >= WIDTH)
+                circles[i].velocity[0] *= -1;
+            if(circles[i].y <= 0 || circles[i].y >= HEIGHT)
+                circles[i].velocity[1] *= -1;
+            draw_circle(circles[i].x, circles[i].y, circles[i].r);
         }
+
         //End frame
         render_end();
         time_update_late();
@@ -86,6 +120,7 @@ int main() {
 
     SDL_DestroyRenderer(global.render.renderer);
     SDL_DestroyWindow(global.render.window);
+    quit_mixer();
     SDL_Quit();
 
     return 0;

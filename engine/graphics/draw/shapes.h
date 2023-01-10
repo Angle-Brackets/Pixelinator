@@ -21,25 +21,25 @@ void draw_point(u32 x, u32 y);
 void draw_line(u32 x1, u32 y1, u32 x2, u32 y2);
 /**
  * Draw a square to the bitmap
- * @param x top left hand corner of square
- * @param y top left hand corner of square
+ * @param x0 top left hand corner of square
+ * @param y0 top left hand corner of square
  * @param s size of square
  */
-void draw_square(u32 x, u32 y, u32 s);
+void draw_square(u32 x0, u32 y0, u32 s);
 /**
  * Draw a rectangle to the bitmap
- * @param x top left hand corner of rectangle
- * @param y top left hand corner of rectangle
+ * @param x0 top left hand corner of rectangle
+ * @param y0 top left hand corner of rectangle
  * @param w width of the rectangle
  * @param h height of the rectangle
  */
-void draw_rect(u32 x, u32 y, u32 w, u32 h);
+void draw_rect(u32 x0, u32 y0, u32 w, u32 h);
 /**
  * Draw a circle to the bitmap
- * @param x center x position of the circle
- * @param y center y position of the circle
+ * @param x0 center x position of the circle
+ * @param y0 center y position of the circle
  * @param r radius of the circle
  */
-void draw_circle(u32 x, u32 y, u32 r);
+void draw_circle(u32 x0, u32 y0, u32 r);
 
 #endif //SDLCENGINE_SHAPES_H

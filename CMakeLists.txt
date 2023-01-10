@@ -1,7 +1,20 @@
 cmake_minimum_required(VERSION 3.21)
 project(SDLCEngine C)
 
+if(NOT CMAKE_BUILD_TYPE)
+    set(CMAKE_BUILD_TYPE Release)
+endif()
+
+if(CMAKE_BUILD_TYPE EQUAL Release)
+    message("Building Release...")
+endif()
+
 set(CMAKE_C_STANDARD 99)
+
+set(CMAKE_CXX_FLAGS "-Wall -Wextra")
+set(CMAKE_CXX_FLAGS_DEBUG "-g")
+set(CMAKE_CXX_FLAGS_RELEASE "-OFast")
+
 find_package(SDL2 REQUIRED COMPONENTS SDL2)
 find_package(SDL2_mixer REQUIRED)
 find_package(SDL2_image REQUIRED)

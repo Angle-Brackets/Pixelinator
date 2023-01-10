@@ -47,14 +47,44 @@ void draw_line(u32 x1, u32 y1, u32 x2, u32 y2) {
     }
 }
 
-void draw_square(u32 x, u32 y, u32 s) {
-
+void draw_square(u32 x0, u32 y0, u32 s) {
+    for(i32 y = y0; y < y0 + s; y++){
+        for(i32 x = x0; x < x0 + s; x++){
+            if(x == x0 || y == y0 || x == x0 + s - 1 || y == y0 + s - 1)
+                draw_pixel(&global.bitmap.stroke_fill, x, y);
+            else
+                draw_pixel(&global.bitmap.shape_fill, x, y);
+        }
+    }
 }
 
-void draw_rect(u32 x, u32 y, u32 w, u32 h) {
-
+void draw_rect(u32 x0, u32 y0, u32 w, u32 h) {
+    for(i32 y = y0; y < y0 + h; y++){
+        for(i32 x = x0; x < x0 + w; x++){
+            if(x == x0 || y == y0 || x == x0 + w - 1 || y == y0 + h - 1)
+                draw_pixel(&global.bitmap.stroke_fill, x, y);
+            else
+                draw_pixel(&global.bitmap.shape_fill, x, y);
+        }
+    }
 }
 
-void draw_circle(u32 x, u32 y, u32 r) {
+void draw_circle(u32 x0, u32 y0, u32 r) {
+    //Source: https://stackoverflow.com/questions/1201200/fast-algorithm-for-drawing-filled-circles
+    //The polynomial used for bounding the edge (r^2 - 2r - 1) is very strange, and I am unsure why it works so well.
+    i32 r2 = r * r;
+    i32 area = r2 << 2;
+    i32 diameter = r << 1;
 
+    for(i32 i = 0; i < area; i++){
+        i32 x = (i % diameter) - r;
+        i32 y = (i / diameter) - r;
+
+        if(x * x + y * y < r2){
+            if(x * x + y * y > r2 - 2*r - 1)
+                draw_pixel(&global.bitmap.stroke_fill, x0 + x, y0 + y);
+            else
+                draw_pixel(&global.bitmap.shape_fill, x0 + x, y0 + y);
+        }
+    }
 }

@@ -10,7 +10,7 @@ static u32 bitmap_scale_y = 1; //Field for appropriately scaling the bitmap to f
 SDL_Texture* bitmap = NULL; //Bitmap for drawing pixels to screen
 bool bitmap_initialized = false; //Field to tell if we've initialized bitmap graphics
 
-void set_background_fill(SDL_Color* color){
+void set_background_clear(SDL_Color* color){
     if(color != NULL) {
         if (SDL_SetRenderDrawColor(global.render.renderer, color->r, color->g, color->b, color->a) != 0) {
             ERROR_EXIT("Failed to set default render graphics color.\n")
@@ -37,6 +37,14 @@ void set_bitmap_tint(SDL_Color* color){
     global.bitmap.tint.r = color->r;
     global.bitmap.tint.g = color->g;
     global.bitmap.tint.b = color->b;
+}
+
+void fill_background(SDL_Color *color) {
+    for(i32 i = 0; i < global.bitmap.height; i++){
+        for(i32 j = 0; j < global.bitmap.width; j++){
+            draw_pixel(color, j, i);
+        }
+    }
 }
 
 static i32 clamp(i32 value, i32 min, i32 max){
