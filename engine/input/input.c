@@ -47,7 +47,7 @@ void input_update(void){
 
 Key_State get_key_state_scancode(SDL_Scancode scancode) {
     if(scancode == SDL_SCANCODE_UNKNOWN){
-        ERROR_RETURN(KS_INVALID, "Invalid scancode specified: %i.\n", scancode)
+        ERROR_RETURN(INVALID_KEY, "Invalid scancode specified: %i.\n", scancode)
     }
 
     return key_states[scancode];
@@ -56,7 +56,7 @@ Key_State get_key_state_scancode(SDL_Scancode scancode) {
 Key_State get_key_state_str(const char* key) {
     SDL_Scancode scancode = SDL_GetScancodeFromName(key);
     if(scancode == SDL_SCANCODE_UNKNOWN){
-        ERROR_RETURN(KS_INVALID, "Invalid key name specified: %s. Check your spelling and capitalization!\n", key)
+        ERROR_RETURN(INVALID_KEY, "Invalid key name specified: %s. Check your spelling and capitalization!\n", key)
     }
 
     return key_states[scancode];
@@ -66,7 +66,7 @@ Key_State get_key_state_id(SDL_KeyCode key) {
     SDL_Scancode scancode = SDL_GetScancodeFromKey(key);
 
     if(scancode == SDL_SCANCODE_UNKNOWN){
-        ERROR_RETURN(KS_INVALID, "Invalid key specified: %i.\n", key)
+        ERROR_RETURN(INVALID_KEY, "Invalid key specified: %i.\n", key)
     }
 
     return key_states[scancode];
