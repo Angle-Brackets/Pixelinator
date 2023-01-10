@@ -2,6 +2,6 @@
 .DS_Store
 cmake-build-debug/
 demo_imgs/
-demo.txt
+demos/demo.txt
 glad/
-demo_code.txt
+demos/

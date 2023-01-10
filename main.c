@@ -15,25 +15,11 @@
 #define HEIGHT 900
 
 static bool running = false;
-static vec2 pos;
-
-//Unused
-static void input_handle(void) {
-    if (global.input.left == KS_PRESSED || global.input.left == KS_HELD)
-        pos[0] -= 500 * global.time.delta;
-    if (global.input.right == KS_PRESSED || global.input.right == KS_HELD)
-        pos[0] += 500 * global.time.delta;
-    if (global.input.up == KS_PRESSED || global.input.up == KS_HELD)
-        pos[1] += 500 * global.time.delta;
-    if (global.input.down == KS_PRESSED || global.input.down == KS_HELD)
-        pos[1] -= 500 * global.time.delta;
-    if (global.input.escape == KS_PRESSED || global.input.escape == KS_HELD)
-        running = false;
-}
 
 int main() {
     time_init(120);
     config_init();
+    init_input();
     render_init(WIDTH, HEIGHT, BITMAP_ACTIVE | MULTITHREADING_ENABLED);
     init_mixer(MIX_INIT_MP3, 0);
     initialize_bitmap(WIDTH,HEIGHT);
@@ -91,7 +77,10 @@ int main() {
         //Start render pass
         render_begin();
         input_update();
-        input_handle();
+
+        if(get_key_state_str("Escape") & KS_PRESSED){
+            running = false;
+        }
 
         //Draw Elements
         fill_background(&B);
@@ -107,6 +96,7 @@ int main() {
             if(circles[i].y <= 0 || circles[i].y >= HEIGHT)
                 circles[i].velocity[1] *= -1;
             draw_circle(circles[i].x, circles[i].y, circles[i].r);
+            set_stroke_fill(&A);
         }
 
         //End frame

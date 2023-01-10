@@ -1,9 +1,14 @@
 #include "../types.h"
 #include "../global.h"
+#include "../util.h"
 #include "input.h"
 
-static void update_key_state(u8 current_state, Key_State* key_state){
-    if(current_state != 0){
+static const u8* current_state;
+static Key_State* key_states;
+static i32 num_keys = 0;
+
+static void update_key_state(u8 state, Key_State* key_state){
+    if(state != 0){
         if(*key_state > 0){
             *key_state = KS_HELD;
         }
@@ -16,12 +21,53 @@ static void update_key_state(u8 current_state, Key_State* key_state){
     }
 }
 
-void input_update(void){
-    const u8* keyboard_state = SDL_GetKeyboardState(NULL);
-    update_key_state(keyboard_state[global.config.keybinds[INPUT_KEY_LEFT]], &global.input.left);
-    update_key_state(keyboard_state[global.config.keybinds[INPUT_KEY_RIGHT]], &global.input.right);
-    update_key_state(keyboard_state[global.config.keybinds[INPUT_KEY_UP]], &global.input.up);
-    update_key_state(keyboard_state[global.config.keybinds[INPUT_KEY_DOWN]], &global.input.down);
-    update_key_state(keyboard_state[global.config.keybinds[INPUT_KEY_ESCAPE]], &global.input.escape);
+void init_input(){
+    //Side note: I am unsure why it defaults to 512 when we can only represent 256 unique keys with a u8...
+    current_state = SDL_GetKeyboardState(&num_keys);
+    if((key_states = (Key_State*)calloc(num_keys, sizeof(Key_State))) == NULL){
+        ERROR_EXIT("Failed to allocate memory for keyboard data.\n")
+    }
+}
 
+void input_update(void){
+    i32 previous = num_keys;
+    current_state = SDL_GetKeyboardState(&num_keys);
+
+    if(previous != num_keys){
+        WARN("Number of keys changed suddenly, undefined behavior may occur. Check your code for potential bugs.\n")
+        if((key_states = (Key_State*)realloc(key_states, sizeof(Key_State) * num_keys)) == NULL){
+            ERROR_EXIT("Failed to reallocate memory for keyboard data.\n")
+        }
+    }
+
+    for(i32 i = 0; i < num_keys; i++){
+        update_key_state(current_state[i], &key_states[i]);
+    }
+}
+
+Key_State get_key_state_scancode(SDL_Scancode scancode) {
+    if(scancode == SDL_SCANCODE_UNKNOWN){
+        ERROR_RETURN(KS_INVALID, "Invalid scancode specified: %i.\n", scancode)
+    }
+
+    return key_states[scancode];
+}
+
+Key_State get_key_state_str(const char* key) {
+    SDL_Scancode scancode = SDL_GetScancodeFromName(key);
+    if(scancode == SDL_SCANCODE_UNKNOWN){
+        ERROR_RETURN(KS_INVALID, "Invalid key name specified: %s. Check your spelling and capitalization!\n", key)
+    }
+
+    return key_states[scancode];
+}
+
+Key_State get_key_state_id(SDL_KeyCode key) {
+    SDL_Scancode scancode = SDL_GetScancodeFromKey(key);
+
+    if(scancode == SDL_SCANCODE_UNKNOWN){
+        ERROR_RETURN(KS_INVALID, "Invalid key specified: %i.\n", key)
+    }
+
+    return key_states[scancode];
 }

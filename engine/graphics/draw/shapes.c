@@ -16,6 +16,7 @@ void draw_line(u32 x1, u32 y1, u32 x2, u32 y2) {
     //Kinda hard to explain, sources used were Wikipedia and this repo:
     //https://en.wikipedia.org/wiki/Line_drawing_algorithm
     //https://github.com/davidmigloz/photo-editor/blob/master/src/main/java/com/davidmiguel/photoeditor/drawing/GuptaSproullsAlgorithm.java
+
     i32 x = x1;
     i32 y = y1;
     i32 dx = x2 - x1;
