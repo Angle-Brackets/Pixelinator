@@ -57,7 +57,7 @@ static i32 clamp(i32 value, i32 min, i32 max){
 
 void draw_pixel(SDL_Color* color, i32 x, i32 y){
     if(pixel_buffer == NULL){
-        ERROR_EXIT("Pixel Buffer not initialized, run initialize_bitmap() before any graphics calls!")
+        ERROR_EXIT("Pixel Buffer not initialized, make sure that you have enabled the bitmap with the Render Flag BITMAP_ENABLED!")
     }
 
     if(x < 0 || x >= global.bitmap.width || y < 0 || y >= global.bitmap.height)
