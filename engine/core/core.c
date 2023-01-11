@@ -8,7 +8,11 @@
 #define SDL_MAIN_HANDLED
 
 static bool running = false;
+static void (*draw)() = NULL;
 
+/**
+ * The draw loop effectively, run every frame.
+ */
 static void loop(){
   time_update();
   render_begin();
@@ -19,7 +23,7 @@ static void loop(){
 }
 
 i32 initialize(u32 window_width, u32 window_height, u32 bitmap_width, u32 bitmap_height, u32 max_fps, u32 volume,
-               Render_Flags render_flags, MIX_InitFlags sound_flags) {
+               Render_Flags render_flags, MIX_InitFlags sound_flags, void (*draw_func)()) {
     //Verify bounds
     VERIFY_LOW_BOUND(window_width, 0, "width")
     VERIFY_LOW_BOUND(window_height, 0, "height")
@@ -50,6 +54,14 @@ i32 initialize(u32 window_width, u32 window_height, u32 bitmap_width, u32 bitmap
         WARN("Bitmap was not initialized despite nonzero width and/or height provided, make sure you passed the BITMAP_ACTIVE flag to the Render Flags argument!\n")
     }
 
+    if(draw_func == NULL){
+        ERROR_RETURN(1, "Could not access given function(s), make sure they are defined.\n")
+    }
+
+    //Setup draw function
+    draw = draw_func;
+
+    //Start engine
     running = true;
 
     return 0;
@@ -59,17 +71,20 @@ void exit_program() {
     running = false;
 }
 
-i32 main(){
-    setup();
+void start(){
+    if(!running){
+        WARN("Call initialize() before running start!\n")
+        return;
+    }
+
     while(running){
         loop();
     }
 
+    //Cleanup code - It can reach this code, don't worry about it.
     SDL_DestroyRenderer(global.render.renderer);
     SDL_DestroyWindow(global.render.window);
     quit_mixer();
     SDL_Quit();
-
-    return 0;
 }
 

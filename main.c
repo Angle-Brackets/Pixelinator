@@ -22,22 +22,6 @@ SDL_Color A = {0, 0, 0, 255};
 SDL_Color B = {255, 255, 255, 0};
 SDL_Color C = {255, 0, 0, 0};
 
-void setup(){
-    initialize(WIDTH, HEIGHT, WIDTH, HEIGHT, 120, 0, MULTITHREADING_ENABLED | BITMAP_ACTIVE, 0);
-
-    for (i32 i = 0; i < 100; i++) {
-        circles[i].r = arc4random() % 100;
-        circles[i].x = arc4random() % WIDTH;
-        circles[i].y = arc4random() % HEIGHT;
-        circles[i].velocity[0] = (arc4random() % 10) + 5;
-        circles[i].velocity[1] = (arc4random() % 10) + 5;
-
-        circles[i].color.r = arc4random() % 255;
-        circles[i].color.g = arc4random() % 255;
-        circles[i].color.b = arc4random() % 255;
-    }
-}
-
 void draw() {
     SDL_Event event;
 
@@ -45,6 +29,7 @@ void draw() {
     while (SDL_PollEvent(&event)) {
         switch (event.type) {
             case SDL_QUIT:
+                exit_program();
                 break;
             case SDL_WINDOWEVENT:
                 switch (event.window.event) {
@@ -90,4 +75,24 @@ void draw() {
     snprintf(buffer, 20, "Engine - %u", global.time.frame_rate);
     SDL_SetWindowTitle(global.render.window, buffer);
 }
+
+i32 main(){
+    initialize(WIDTH, HEIGHT, WIDTH, HEIGHT, 120, 0, MULTITHREADING_ENABLED | BITMAP_ACTIVE, 0, draw);
+
+    for (i32 i = 0; i < 100; i++) {
+        circles[i].r = arc4random() % 100;
+        circles[i].x = arc4random() % WIDTH;
+        circles[i].y = arc4random() % HEIGHT;
+        circles[i].velocity[0] = (arc4random() % 10) + 5;
+        circles[i].velocity[1] = (arc4random() % 10) + 5;
+
+        circles[i].color.r = arc4random() % 255;
+        circles[i].color.g = arc4random() % 255;
+        circles[i].color.b = arc4random() % 255;
+    }
+
+    start();
+}
+
+
 

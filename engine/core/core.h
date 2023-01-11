@@ -17,21 +17,21 @@
  * @param render_flags Flags to modify attributes of the rendering pipeline. It is recommended that MULTITHREADING_ENABLED is passed at minimum for a performance gain.
  *                     If you want access to bitmap graphics, pass the BITMAP_ENABLED flag, otherwise they will not work.
  * @param sound_flags Flags to modify attributes of the sound pipeline. By default MP3 (Music) and WAV (SFX) are automatically supported. If that is all that's needed, then pass 0.
+ * @param draw_func You must provide an implementation for this function! This function is run every frame and is primarily used to render pixels to the screen.
+ *
  * @return 0 for success, 1 if an error occurred.
  */
-i32 initialize(u32 window_width, u32 window_height, u32 bitmap_width, u32 bitmap_height, u32 max_fps, u32 volume, Render_Flags render_flags, MIX_InitFlags sound_flags);
+i32 initialize(u32 window_width, u32 window_height, u32 bitmap_width, u32 bitmap_height, u32 max_fps, u32 volume, Render_Flags render_flags, MIX_InitFlags sound_flags, void (*draw_func)());
 
+/**
+ * Starts the program, must call initialize() before this function.
+ */
+void start();
+
+/**
+ * Closes the program
+ */
 void exit_program();
-
-/**
- * You must provide an implementation for this function! This is run once at the start of your program. Useful for initializing variables and/or state.
- * TODO: I need to add a way to make it so you can access command line args
- */
-void setup();
-/**
- * You must provide an implementation for this function! This function is run every frame and is primarily used to render pixels to the screen.
- */
-void draw();
 
 
 #endif //SDLCENGINE_CORE_H
