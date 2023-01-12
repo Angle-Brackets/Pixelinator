@@ -23,25 +23,6 @@ SDL_Color B = {255, 255, 255, 0};
 SDL_Color C = {255, 0, 0, 0};
 
 void draw() {
-    SDL_Event event;
-
-    //This might be moved to be an event.h/event.c file FOR EVERY event to be polled.
-    while (SDL_PollEvent(&event)) {
-        switch (event.type) {
-            case SDL_QUIT:
-                exit_program();
-                break;
-            case SDL_WINDOWEVENT:
-                switch (event.window.event) {
-                    case SDL_WINDOWEVENT_SIZE_CHANGED:
-                        global.render.width = event.window.data1;
-                        global.render.height = event.window.data2;
-                        break;
-                }
-            default:
-                break;
-        }
-    }
     static bool paused = false;
 
     if (get_key_state_str("Escape") & KS_PRESSED) {
@@ -62,10 +43,12 @@ void draw() {
             circles[i].x += circles[i].velocity[0];
             circles[i].y += circles[i].velocity[1];
 
-            if (circles[i].x <= 0 || circles[i].x >= WIDTH)
+            if (circles[i].x <= 0 || circles[i].x >= WIDTH) {
                 circles[i].velocity[0] *= -1;
-            if (circles[i].y <= 0 || circles[i].y >= HEIGHT)
+            }
+            if (circles[i].y <= 0 || circles[i].y >= HEIGHT) {
                 circles[i].velocity[1] *= -1;
+            }
         }
         draw_circle(circles[i].x, circles[i].y, circles[i].r);
         set_stroke_fill(&A);

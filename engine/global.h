@@ -1,6 +1,7 @@
 #ifndef SDLCENGINE_GLOBAL_H
 #define SDLCENGINE_GLOBAL_H
 
+#include "core/core.h"
 #include "render/render.h"
 #include "config/config.h"
 #include "input/input.h"
@@ -10,6 +11,7 @@
 
 typedef struct global {
     //State variables - Contain information about the program
+    Engine_State engine;
     Render_State render;
     Config_State config;
     Input_State input;

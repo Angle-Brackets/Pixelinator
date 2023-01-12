@@ -6,6 +6,12 @@
 #include "../render/render.h"
 
 #define VERIFY_LOW_BOUND(x, min, name) {if(x < min){fprintf(stderr, "Illegal value for %s passed.\n", name); return 1;}} //Validates if an entered value is not lower than a given value. Can't check a max because multiple monitors might screw with it too much.
+
+typedef enum engine_state {
+    UNFOCUSED = 0x1 << 0, //If the window is not currently focused, the engine will pause.
+    FOCUSED = 0x1 << 1, //If the window is focused, the engine will be running.
+} Engine_State;
+
 /**
  * You must call this function before you render anything to initialize the engine. Do not call this more than once unless if you know what you're doing.
  * @param window_width Width in pixels of the window

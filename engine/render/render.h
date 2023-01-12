@@ -11,7 +11,7 @@ typedef enum render_flags {
     BITMAP_ACTIVE = 0x1, //Flag to set the bitmap to be activated.
     MULTITHREADING_ENABLED = 0x1 << 1, //Flag to enable multithreading
     DISABLE_VSYNC = 0x1 << 2, //Flag to disable vsync
-    UNUSED_3 = 0x1 << 3,
+    IGNORE_FOCUS = 0x1 << 3, //Will ignore if the window is focused or not (will still draw if not focused for example)
     UNUSED_4 = 0x1 << 4,
     UNUSED_5 = 0x1 << 5,
     UNUSED_6 = 0x1 << 6,

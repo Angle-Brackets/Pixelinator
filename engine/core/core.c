@@ -5,20 +5,56 @@
 #include "../audio/sound.h"
 #include "../graphics/bitmap/bitmap.h"
 #include "../global.h"
-#define SDL_MAIN_HANDLED
 
 static bool running = false;
 static void (*draw)() = NULL;
 
 /**
+ * Used to poll universal events like closing the window or if its size changes.
+ */
+static void poll_events(){
+    SDL_Event event;
+
+    //This might be moved to be an event.h/event.c file FOR EVERY event to be polled.
+    while (SDL_PollEvent(&event)) {
+        switch (event.type) {
+            case SDL_QUIT:
+                exit_program();
+                break;
+            case SDL_WINDOWEVENT:
+                switch (event.window.event) {
+                    case SDL_WINDOWEVENT_SIZE_CHANGED:
+                        global.render.width = event.window.data1;
+                        global.render.height = event.window.data2;
+                        break;
+                    case SDL_WINDOWEVENT_FOCUS_GAINED:
+                        global.engine = FOCUSED;
+                        break;
+                    case SDL_WINDOWEVENT_FOCUS_LOST:
+                        global.engine = UNFOCUSED;
+                        break;
+                }
+            default:
+                break;
+        }
+    }
+}
+
+/**
  * The draw loop effectively, run every frame.
  */
 static void loop(){
+  poll_events();
   time_update();
-  render_begin();
-  input_update();
-  draw();
-  render_end();
+
+  //Will not update screen if the window is not focused, unless appropriate render flag is set.
+  if(global.engine & FOCUSED || global.render_flags & IGNORE_FOCUS){
+      render_begin();
+      input_update();
+      draw();
+      render_end();
+  }
+
   time_update_late();
 }
 
@@ -55,7 +91,7 @@ i32 initialize(u32 window_width, u32 window_height, u32 bitmap_width, u32 bitmap
     }
 
     if(draw_func == NULL){
-        ERROR_RETURN(1, "Could not access given function(s), make sure they are defined.\n")
+        ERROR_RETURN(1, "Could not access given function, make sure they are defined.\n")
     }
 
     //Setup draw function
@@ -63,6 +99,7 @@ i32 initialize(u32 window_width, u32 window_height, u32 bitmap_width, u32 bitmap
 
     //Start engine
     running = true;
+    global.engine = FOCUSED;
 
     return 0;
 }
