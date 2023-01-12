@@ -31,6 +31,11 @@ void draw() {
 
     if (get_key_state_str("P") & KS_PRESSED) {
         paused = !paused;
+
+        if(paused)
+            pause_audio();
+        else
+            resume_audio();
     }
     static u32 s = 100;
     static i32 x = 0;
@@ -81,7 +86,10 @@ void draw() {
 }
 
 i32 main(){
-    initialize(WIDTH, HEIGHT, WIDTH, HEIGHT, 120, 0, MULTITHREADING_ENABLED | BITMAP_ACTIVE, 0, draw);
+    initialize(WIDTH, HEIGHT, WIDTH, HEIGHT, 120, 15, MULTITHREADING_ENABLED | BITMAP_ACTIVE | IGNORE_FOCUS, 0, draw);
+    u32 music_index = load_music("../demo_imgs_rgba/bad_apple.mp3");
+
+    play_music(music_index);
 
     for (i32 i = 0; i < 100; i++) {
         circles[i].r = arc4random() % 100;
@@ -94,6 +102,7 @@ i32 main(){
         circles[i].color.g = arc4random() % 255;
         circles[i].color.b = arc4random() % 255;
     }
+    SDL_RWops io;
 
     start();
 }

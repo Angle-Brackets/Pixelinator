@@ -5,6 +5,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <errno.h>
+#include <SDL_image.h>
 
 #include "../types.h"
 #include "../util.h"
@@ -86,5 +87,14 @@ int io_file_write(void* buffer, size_t size, const char* path){
     }
 
     return 0;
+}
+
+SDL_Surface* read_png(const char* file) {
+    static SDL_RWops *io = NULL;
+    io = SDL_RWFromFile(file, "rb");
+    SDL_Surface* frame = IMG_LoadPNG_RW(io);
+    SDL_RWclose(io);
+
+    return frame;
 }
 

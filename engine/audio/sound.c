@@ -123,6 +123,16 @@ u8 play_sfx(u32 index){
     return 1;
 }
 
+void pause_audio() {
+    Mix_Pause(-1); //Sfx
+    Mix_PauseMusic(); //Music
+}
+
+void resume_audio() {
+    Mix_Resume(-1); //Sfx
+    Mix_ResumeMusic(); //Music
+}
+
 void free_music(u32 index){
     Mix_FreeMusic(music[index]);
     music[index] = NULL;

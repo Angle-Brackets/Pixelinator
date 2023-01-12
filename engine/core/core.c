@@ -29,9 +29,13 @@ static void poll_events(){
                         break;
                     case SDL_WINDOWEVENT_FOCUS_GAINED:
                         global.engine = FOCUSED;
+                        if(!(global.render_flags & IGNORE_FOCUS))
+                            resume_audio();
                         break;
                     case SDL_WINDOWEVENT_FOCUS_LOST:
                         global.engine = UNFOCUSED;
+                        if(!(global.render_flags & IGNORE_FOCUS))
+                            pause_audio();
                         break;
                 }
             default:

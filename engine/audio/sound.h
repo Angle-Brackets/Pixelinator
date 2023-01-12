@@ -68,6 +68,16 @@ u8 play_music(u32 index);
 u8 play_sfx(u32 index);
 
 /**
+ * Pauses all audio playing.
+ */
+void pause_audio();
+
+/**
+ * Resumes all audio playing.
+ */
+void resume_audio();
+
+/**
  * Frees up the memory for this particular index's music.
  * @param index index of where the music is stored
  */
