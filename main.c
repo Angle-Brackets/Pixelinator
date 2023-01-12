@@ -32,6 +32,24 @@ void draw() {
     if (get_key_state_str("P") & KS_PRESSED) {
         paused = !paused;
     }
+    static u32 s = 100;
+    static i32 x = 0;
+
+    if(get_key_state_str("Up") & KS_HELD){
+        s += 1;
+    }
+
+    if(get_key_state_str("Down") & KS_HELD){
+        s -= 1;
+    }
+
+    if(get_key_state_str("Left") & KS_HELD){
+        x -=  10;
+    }
+
+    if(get_key_state_str("Right") & KS_HELD){
+        x += 10;
+    }
 
     //Draw Elements
     fill_background(&B);
@@ -53,6 +71,9 @@ void draw() {
         draw_circle(circles[i].x, circles[i].y, circles[i].r);
         set_stroke_fill(&A);
     }
+
+    bitmap_scale(s, s);
+    bitmap_shift(x, 0);
 
     static char buffer[20];
     snprintf(buffer, 20, "Engine - %u", global.time.frame_rate);

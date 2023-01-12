@@ -5,8 +5,8 @@
 #include "pixel_threading.h"
 
 static SDL_Color** pixel_buffer = NULL; //2D array that is initialized to be a 2D matrix of pixels that is HEIGHT, WIDTH (rows and cols)
-static u32 bitmap_scale_x = 1; //Field for appropriately scaling the bitmap to fit the screen width (X values)
-static u32 bitmap_scale_y = 1; //Field for appropriately scaling the bitmap to fit the screen height (Y values)
+static u32 bitmap_scale_x = 1; //Field for appropriately transform the bitmap to fit the screen width (X values)
+static u32 bitmap_scale_y = 1; //Field for appropriately transform the bitmap to fit the screen height (Y values)
 SDL_Texture* bitmap = NULL; //Bitmap for drawing pixels to screen
 bool bitmap_initialized = false; //Field to tell if we've initialized bitmap graphics
 
@@ -80,11 +80,43 @@ void draw_pixels_from_surface(SDL_Surface* surface){
     }
 }
 
+void rotate_bitmap_deg(u32 degrees) {
+    global.bitmap.rotation = degrees % 360;
+}
+
+void rotate_bitmap_rad(f64 radians) {
+    global.bitmap.rotation = (u32)(radians * (180.0 / M_PI)) % 360;
+}
+
+void bitmap_shift(i32 x, i32 y) {
+    global.bitmap.transform.x = x;
+    global.bitmap.transform.y = y;
+}
+
+void bitmap_scale(u32 width_scale, u32 height_scale) {
+    if(width_scale > 500)
+        width_scale = 500;
+    if(height_scale > 500)
+        height_scale = 500;
+
+    if(width_scale == 0 || height_scale == 0){
+        WARN("Scale-factor of 0 percent not allowed!\n")
+        return;
+    }
+
+    f32 scale_w = 100.0f/width_scale;
+    f32 scale_h = 100.0f/height_scale;
+
+    global.bitmap.transform.w = global.render.width * scale_w;
+    global.bitmap.transform.h = global.render.height * scale_h;
+}
+
 void initialize_bitmap(u32 width, u32 height){
     if(!bitmap_initialized) {
         Bitmap_State bmp;
         bmp.width = global.render.width;
         bmp.height = global.render.height;
+        bmp.rotation = 0;
 
         bmp.tint.r = 255;
         bmp.tint.g = 255;
@@ -97,6 +129,11 @@ void initialize_bitmap(u32 width, u32 height){
         bmp.shape_fill.r = 255;
         bmp.shape_fill.g = 255;
         bmp.shape_fill.b = 255;
+
+        bmp.transform.x = 0;
+        bmp.transform.y = 0;
+        bmp.transform.w = global.render.width;
+        bmp.transform.h = global.render.height;
 
         if(width > 0)
             bmp.width = width;
@@ -158,7 +195,7 @@ void draw_pixel_buffer(){
     //the read in pixels are going to be initialized with the current screen colors, SDL does not guarantee this!
 
     //u32 rather than SDL_Color is used because the texture interprets the bits as colors correctly.
-    //This scaling is using a Kronecker's Product between our bitmap matrix and our rescaled matrix that is scale_x and scale_y larger.
+    //This transform is using a Kronecker's Product between our bitmap matrix and our rescaled matrix that is scale_x and scale_y larger.
 
     //Multithreaded version, should basically always be used.
     if(global.render_flags & MULTITHREADING_ENABLED){
@@ -188,3 +225,4 @@ void draw_pixel_buffer(){
     SDL_UnlockTexture(bitmap);
     SDL_FreeFormat(format);
 }
+

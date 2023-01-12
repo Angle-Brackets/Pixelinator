@@ -2,15 +2,18 @@
 #define SDLCENGINE_BITMAP_H
 
 #include <SDL.h>
+#include <math.h>
 #include <stdbool.h>
 #include "../../types.h"
 
 typedef struct bitmap_state {
     u32 width;
     u32 height;
+    u32 rotation;
     SDL_Color tint;
     SDL_Color stroke_fill;
     SDL_Color shape_fill;
+    SDL_Rect transform;
 } Bitmap_State;
 /**
  * Sets the clear color (color used after rendering a frame) of the window
@@ -55,6 +58,32 @@ void draw_pixels_from_surface(SDL_Surface* surface);
  * Draws the pixel buffer stored in memory to a bitmap texture.
  */
 void draw_pixel_buffer();
+
+/**
+ * Rotate the bitmap by a given amount of degrees
+ * @param degrees 0 - 360 degree rotation on the bitmap after its done rendering (Any values larger are moved into this range)
+ */
+void rotate_bitmap_deg(u32 degrees);
+
+/**
+ * Rotate the bitmap by a given amount of radians
+ * @param degrees 0 - 2π degree rotation on the bitmap after its done rendering (Any values larger are moved into this range)
+ */
+void rotate_bitmap_rad(f64 radians);
+
+/**
+ * Will move the position that the bitmap is rendering to the new x and y positions given.
+ * @param x New x position to start rendering from (top left hand corner of rectangular region)
+ * @param y New y position to start rendering from (top left hand corner of rectangular region)
+ */
+void bitmap_shift(i32 x, i32 y);
+
+/**
+ * Scale the bitmap by a percentage of the window width and height to zoom in or out of the bitmap
+ * @param width_scale percentage from 0 - 500% for the width of the window
+ * @param height_scale percentage from 0 - 500% for the height of the window
+ */
+void bitmap_scale(u32 width_scale, u32 height_scale);
 
 /**
  * Sets the tint of the bitmap (multiplies the rgb values against the bitmap texture before rendering)

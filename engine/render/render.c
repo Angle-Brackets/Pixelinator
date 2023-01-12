@@ -26,7 +26,7 @@ void render_end(void){
         if (bitmap_initialized) {
             draw_pixel_buffer();
             SDL_SetTextureColorMod(bitmap, global.bitmap.tint.r, global.bitmap.tint.g, global.bitmap.tint.b);
-            SDL_RenderCopyEx(global.render.renderer, bitmap, NULL, NULL, 0, NULL, 0);
+            SDL_RenderCopyEx(global.render.renderer, bitmap, &global.bitmap.transform, NULL, global.bitmap.rotation, NULL, 0);
         }
 
         SDL_RenderPresent(global.render.renderer);
