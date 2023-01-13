@@ -10,67 +10,75 @@
 
 # move all .framework files in dmgs into the /Library/Frameworks/ folder.
 
-# files to compile:
-# src/engine/render/render.c 
-# include/render/render.h 
-# src/engine/render/render_init.c 
-# src/engine/render/render_internal.h 
-# src/engine/global.c 
-# include/global.h 
-# src/engine/io/io.c 
-# include/io/io.h 
-# src/engine/render/render_util.c 
-# include/input/input.h 
-# src/engine/input/input.c 
-# include/config/config.h 
-# src/engine/config/config.c 
-# src/engine/time.c 
-# include/time.h 
-# src/engine/graphics/bitmap/bitmap.c 
-# include/graphics/bitmap.h 
-# src/engine/graphics/bitmap/pixel_threading.c 
-# src/engine/graphics/bitmap/pixel_threading.h 
-# src/engine/audio/sound.c 
-# include/audio/sound.h 
-# src/engine/graphics/draw/shapes.c 
-# include/graphics/shapes.h 
-# src/engine/core/core.c 
-# include/core/core.h
+# files are located relative to project root, and compiled to objects in clang/objects/ directory.
+OBJ_DIR = objects/
+ROOT = ../
 
-CLANG_DIR = ./clang/
-OBJ_DIR = $(CLANG_DIR)/objects/
-
+# to add flags to ALL gcc commands, add flags here:
 FLAGS = -Wall -Wextra -Ofast -g
-FDIR = /Library/Frameworks # additional directory for user frameworks 
 
 # directories used to resolve include preprocessors
-GLAD_INCLUDE = ./glad/include/
+FDIR = /Library/Frameworks # additional directory for user frameworks 
+GLAD_INCLUDE = $(ROOT)glad/include/
 SDL_INCLUDE = /Library/Frameworks/SDL2.framework/Headers/
 SDL_IMG_INCLUDE = /Library/Frameworks/SDL2_image.framework/Headers/
 SDL_MIX_INCLUDE = /Library/Frameworks/SDL2_mixer.framework/Headers/
 
 # makefile prereqs for linking
-REQUIRED_OBJECTS = $(OBJ_DIR)main.o $(OBJ_DIR)render.o
+
+
+ALL_REQS = $(OBJ_DIR)main.o $(OBJ_DIR)render.o
 
 # compiles all files
-compile_osx: $(OBJ_DIR)main.o | $(CLANG_DIR) $(OBJ_DIR)
-	gcc test.c -F$(FDIR) -framework SDL2,SDL2_mixer,SDL_image $(FLAGS) -o $(CLANG_DIR)Pixelinator
-	@echo "Completed successfully"
-
-# --- directories ---
-
-$(CLANG_DIR):
-	mkdir clang_builds
-
-$(OBJ_DIR):
-	mkdir clang/objects
+compile_osx: $(ALL_REQS)
+	mkdir -p $(OBJ_DIR)
+# gcc test.c -F$(FDIR) -framework SDL2,SDL2_mixer,SDL_image $(FLAGS) -o $(CLANG_DIR)Pixelinator
+	@echo "Linking stage is not complete"
+	
+# deletes all C ROF files generated thus far
+clean:
+	rm -r $(OBJ_DIR)
 
 # --- object files ---
 
 $(OBJ_DIR)main.o:
-	gcc main.c -F$(FDIR) $(FLAGS) -I$(GLAD_INCLUDE) -I$(SDL_INCLUDE) -I$(SDL_MIX_INCLUDE) -c -o clang/objects/main.o
+	gcc $(ROOT)main.c $(FLAGS) -F$(FDIR) -I$(GLAD_INCLUDE) -I$(SDL_INCLUDE) -I$(SDL_MIX_INCLUDE) -c -o $(OBJ_DIR)main.o
 
 $(OBJ_DIR)render.o:
-	gcc src/engine/render/render.c -c -o clang/objects/render.o
+	gcc $(ROOT)src/engine/render/render.c $(FLAGS) -F$(FDIR) -I$(SDL_INCLUDE) -I$(SDL_MIX_INCLUDE) -c -o $(OBJ_DIR)render.o
 
+$(OBJ_DIR)render_init.o:
+	gcc $(ROOT)src/engine/render/render_init.c $(FLAGS) -F$(FDIR) -I$(SDL_INCLUDE) -I$(SDL_MIX_INCLUDE) -c -o $(OBJ_DIR)render_init.o
 
+$(OBJ_DIR)global.o:
+	gcc $(ROOT)src/engine/global.c $(FLAGS) -F$(FDIR) -I$(SDL_INCLUDE) -I$(SDL_MIX_INCLUDE) -c -o $(OBJ_DIR)global.o
+
+$(OBJ_DIR)io.o:
+	gcc $(ROOT)src/engine/io/io.c $(FLAGS) -F$(FDIR) -I$(SDL_INCLUDE) -I$(SDL_MIX_INCLUDE) -I$(SDL_IMG_INCLUDE) -c -o $(OBJ_DIR)io.o
+
+$(OBJ_DIR)render_util.o:
+	@echo "render_util.c is deprecated, cannot generate object file!"
+
+$(OBJ_DIR)input.o:
+	gcc $(ROOT)src/engine/input/input.c $(FLAGS) -F$(FDIR) -I$(SDL_INCLUDE) -I$(SDL_MIX_INCLUDE) -c -o $(OBJ_DIR)input.o
+
+$(OBJ_DIR)config.o:
+	gcc $(ROOT)src/engine/config/config.c $(FLAGS) -F$(FDIR) -I$(SDL_INCLUDE) -I$(SDL_MIX_INCLUDE) -c -o $(OBJ_DIR)config.o
+
+$(OBJ_DIR)time.o:
+	gcc $(ROOT)src/engine/time.c $(FLAGS) -F$(FDIR) -I$(SDL_INCLUDE) -I$(SDL_MIX_INCLUDE) -c -o $(OBJ_DIR)time.o
+
+$(OBJ_DIR)bitmap.o:
+	gcc $(ROOT)src/engine/graphics/bitmap/bitmap.c $(FLAGS) -F$(FDIR) -I$(SDL_INCLUDE) -I$(SDL_MIX_INCLUDE) -c -o $(OBJ_DIR)bitmap.o
+
+$(OBJ_DIR)pixel_threading.o:
+	gcc $(ROOT)src/engine/graphics/bitmap/pixel_threading.c $(FLAGS) -F$(FDIR) -I$(SDL_INCLUDE) -c -o $(OBJ_DIR)pixel_threading.o
+
+$(OBJ_DIR)shapes.o:
+	gcc $(ROOT)src/engine/graphics/draw/shapes.c $(FLAGS) -F$(FDIR) -I$(SDL_INCLUDE) -I$(SDL_MIX_INCLUDE) -c -o $(OBJ_DIR)shapes.o
+
+$(OBJ_DIR)sound.o:
+	gcc $(ROOT)src/engine/audio/sound.c $(FLAGS) -F$(FDIR) -I$(SDL_INCLUDE) -I$(SDL_MIX_INCLUDE) -c -o $(OBJ_DIR)sound.o
+
+$(OBJ_DIR)core.o:
+	gcc $(ROOT)src/engine/core/core.c $(FLAGS) -F$(FDIR) -I$(SDL_INCLUDE) -I$(SDL_MIX_INCLUDE) -c -o $(OBJ_DIR)core.o
