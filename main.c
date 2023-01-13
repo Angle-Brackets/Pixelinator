@@ -1,9 +1,10 @@
 #include <stdio.h>
 #include <stdbool.h>
 #include <SDL2/SDL.h>
-#include "engine/graphics/draw/shapes.h"
-#include "engine/global.h"
-#include "engine/core/core.h"
+#include <linmath.h>
+#include "include/graphics/shapes.h"
+#include "include/global.h"
+#include "include/core/core.h"
 
 #define WIDTH 1440
 #define HEIGHT 900
@@ -86,10 +87,7 @@ void draw() {
 }
 
 i32 main(){
-    initialize(WIDTH, HEIGHT, WIDTH, HEIGHT, 120, 15, MULTITHREADING_ENABLED | BITMAP_ACTIVE | IGNORE_FOCUS, 0, draw);
-    u32 music_index = load_music("../demo_imgs_rgba/bad_apple.mp3");
-
-    play_music(music_index);
+    initialize(WIDTH, HEIGHT, WIDTH, HEIGHT, 120, 15, MULTITHREADING_ENABLED | BITMAP_ACTIVE, 0, draw);
 
     for (i32 i = 0; i < 100; i++) {
         circles[i].r = arc4random() % 100;
@@ -102,7 +100,6 @@ i32 main(){
         circles[i].color.g = arc4random() % 255;
         circles[i].color.b = arc4random() % 255;
     }
-    SDL_RWops io;
 
     start();
 }

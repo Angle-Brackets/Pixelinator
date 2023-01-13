@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.21)
-project(SDLCEngine C)
+project(Pixelinator VERSION 1.0 DESCRIPTION "A 2D Engine using SDL and C")
 
 if(NOT CMAKE_BUILD_TYPE)
     set(CMAKE_BUILD_TYPE Release)
@@ -19,7 +19,15 @@ find_package(SDL2 REQUIRED COMPONENTS SDL2)
 find_package(SDL2_mixer REQUIRED)
 find_package(SDL2_image REQUIRED)
 
+find_package(Threads REQUIRED)
+if(THREADS_HAVE_PTHREAD_ARG)
+    target_compile_options(Pixelinator PUBLIC "-pthread")
+endif()
+if(CMAKE_THREAD_LIBS_INIT)
+    target_link_libraries(Pixelinator "${CMAKE_THREAD_LIBS_INIT}")
+endif()
+
 add_subdirectory(glad/)
 
-add_executable(SDLCEngine main.c engine/types.h engine/util.h engine/render/render.c engine/render/render.h engine/render/render_init.c engine/render/render_internal.h engine/global.c engine/global.h engine/io/io.c engine/io/io.h engine/render/render_util.c engine/input/input.h engine/input/input.c engine/config/config.h engine/config/config.c engine/time.c engine/time.h engine/graphics/bitmap/bitmap.c engine/graphics/bitmap/bitmap.h engine/graphics/bitmap/pixel_threading.c engine/graphics/bitmap/pixel_threading.h engine/audio/sound.c engine/audio/sound.h engine/graphics/draw/shapes.c engine/graphics/draw/shapes.h engine/core/core.c engine/core/core.h)
-target_link_libraries(SDLCEngine PRIVATE glad SDL2::SDL2 SDL2_mixer::SDL2_mixer SDL2_image::SDL2_image)
+add_executable(Pixelinator main.c include/types.h include/util.h src/engine/render/render.c include/render/render.h src/engine/render/render_init.c src/engine/render/render_internal.h src/engine/global.c include/global.h src/engine/io/io.c include/io/io.h src/engine/render/render_util.c include/input/input.h src/engine/input/input.c include/config/config.h src/engine/config/config.c src/engine/time.c include/time.h src/engine/graphics/bitmap/bitmap.c include/graphics/bitmap.h src/engine/graphics/bitmap/pixel_threading.c src/engine/graphics/bitmap/pixel_threading.h src/engine/audio/sound.c include/audio/sound.h src/engine/graphics/draw/shapes.c include/graphics/shapes.h src/engine/core/core.c include/core/core.h)
+target_link_libraries(Pixelinator PRIVATE glad SDL2::SDL2 SDL2_mixer::SDL2_mixer SDL2_image::SDL2_image)
