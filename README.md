@@ -22,7 +22,12 @@ but technically does support other OpenGL primitives.
 - A better way to import the library other than just shoving the code in a project, but statically linking this has been a headache.
 
 ## Other Contributors
-- Thank you to [@rishitkhare](https://github.com/rishitkhare) for the logo and for initial testing!
+- Thank you to [@rishitkhare](https://github.com/rishitkhare) for the logo, initial testing, and code contributions!
+
+## Installation
+- There is a Makefile inside clang-builds (should also work with gcc but not tested) that will compile all of the code correctly
+  for MacOS and in theory Linux as well. Make sure that you have the SDL2, SDL2_Mixer, SDL2_Image, and glad libraries installed beforehand.
+  You should then be able to compile them on Mac and Linux with the respective Makefile or CMakeLists.
 
 ### Examples
 1. Bitmap graphics example

@@ -1,5 +1,6 @@
 # Author: Rishit Khare
-# This makefile is written to compile the PIXELINATOR engine
+# Modified by Angle-Brackets
+# This Makefile is written to compile the PIXELINATOR engine
 # using Clang, a version of gcc for OSX. It will not work on 
 # other operating systems.
 
@@ -23,7 +24,8 @@ EXE_DIR = executables/
 ROOT = ../
 
 # to add flags to ALL gcc commands, add flags here:
-FLAGS = -Wall -Wextra -Ofast -g
+FLAGS_RELEASE = -Wall -Wextra -Ofast -g -lpthread
+FLAGS_DEBUG = -Wall -Wextra -g -lpthread
 
 # directories used to resolve include preprocessors
 FDIR = /Library/Frameworks # additional directory for user frameworks (apart from /System/Library/Frameworks/)
@@ -32,7 +34,7 @@ SDL_INCLUDE = /Library/Frameworks/SDL2.framework/Headers/
 SDL_IMG_INCLUDE = /Library/Frameworks/SDL2_image.framework/Headers/
 SDL_MIX_INCLUDE = /Library/Frameworks/SDL2_mixer.framework/Headers/
 
-# makefile object prereqs for linking
+# Makefile object prereqs for linking
 GLOBAL = $(OBJ_DIR)global.o $(OBJ_DIR)time.o
 RENDER = $(OBJ_DIR)render_init.o $(OBJ_DIR)render.o
 IO = $(OBJ_DIR)io.o
@@ -44,11 +46,17 @@ AUDIO = $(OBJ_DIR)sound.o
 
 ALL_REQS = $(OBJ_DIR)main.o $(GLOBAL) $(RENDER) $(IO) $(INPUT) $(GRAPHICS) $(CORE) $(CONFIG) $(AUDIO)
 
-# compiles all files
-compile_osx: $(ALL_REQS)
+# compiles all files (MacOS)
+compile_osx_release: $(ALL_REQS)
 	mkdir -p $(OBJ_DIR)
 	mkdir -p $(EXE_DIR)
-	gcc $(ALL_REQS) -F$(FDIR) -framework SDL2 -framework SDL2_mixer -framework SDL2_image $(FLAGS) -o $(EXE_DIR)Pixelinator
+	gcc $(ALL_REQS) -F$(FDIR) -framework SDL2 -framework SDL2_mixer -framework SDL2_image $(FLAGS_RELEASE) -o $(EXE_DIR)Pixelinator
+	@echo "Executable generated! Successfully compiled :D"
+
+compile_osx_debug: $(ALL_REQS)
+	mkdir -p $(OBJ_DIR)
+	mkdir -p $(EXE_DIR)
+	gcc $(ALL_REQS) -F$(FDIR) -framework SDL2 -framework SDL2_mixer -framework SDL2_image $(FLAGS_DEBUG) -o $(EXE_DIR)Pixelinator_DEBUG
 	@echo "Executable generated! Successfully compiled :D"
 	
 # deletes all C ROF files generated thus far
