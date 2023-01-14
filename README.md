@@ -17,9 +17,10 @@ but technically does support other OpenGL primitives.
 - Rudimentary support for loading PNGs as bitmaps (must be RGBA format) and loading custom file
   formats like ``.ini`` through the config header.
 - Engine automatically pauses all processes if focus is lost to save resources (can be disabled if wanted).
+- Statically link the library to include and use in your own projects!
 
 ## In Progress
-- A better way to import the library other than just shoving the code in a project, but statically linking this has been a headache.
+- Text Rendering!
 
 ## Other Contributors
 - Thank you to [@rishitkhare](https://github.com/rishitkhare) for the logo, initial testing, and code contributions!
@@ -28,6 +29,10 @@ but technically does support other OpenGL primitives.
 - There is a Makefile inside clang-builds (should also work with gcc but not tested) that will compile all of the code correctly
   for MacOS and in theory Linux as well. Make sure that you have the SDL2, SDL2_Mixer, SDL2_Image, and glad libraries installed beforehand.
   You should then be able to compile them on Mac and Linux with the respective Makefile or CMakeLists.
+- **READ IF YOU WANT TO USE THE LIBRARY**: To compile this library use the Makefile located in clang-builds and use the 
+  ``make library`` rule to generate ``libPixelinator.a`` file. Make sure you copy the headers located in the ``include`` folder
+  to be able to access the methods in the library (and also have the SDL dependencies installed on your system). We hope you enjoy
+  using the Pixelinator Engine and only ask that you give credit if you do use it!
 
 ### Examples
 1. Bitmap graphics example

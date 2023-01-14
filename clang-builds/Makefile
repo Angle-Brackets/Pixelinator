@@ -46,6 +46,11 @@ AUDIO = $(OBJ_DIR)sound.o
 
 ALL_REQS = $(OBJ_DIR)main.o $(GLOBAL) $(RENDER) $(IO) $(INPUT) $(GRAPHICS) $(CORE) $(CONFIG) $(AUDIO)
 
+#Colors
+RED = \033[0;31m
+GREEN = \033[0;32m
+WHITE = \033[0;37m
+
 # compiles all files (MacOS)
 compile_osx_release: $(ALL_REQS)
 	mkdir -p $(OBJ_DIR)
@@ -57,7 +62,14 @@ compile_osx_debug: $(ALL_REQS)
 	mkdir -p $(OBJ_DIR)
 	mkdir -p $(EXE_DIR)
 	gcc $(ALL_REQS) -F$(FDIR) -framework SDL2 -framework SDL2_mixer -framework SDL2_image $(FLAGS_DEBUG) -o $(EXE_DIR)Pixelinator_DEBUG
-	@echo "Executable generated! Successfully compiled :D"
+	@echo "$(GREEN)Executable generated! Successfully compiled :D$(WHITE)"
+
+library: compile_osx_release
+	@rm $(OBJ_DIR)main.o
+	@echo "$(RED)Deleted main.o, you need to recompile if you want to compile with a main entrypoint$(WHITE)"
+	ar -rc libPixelinator.a $(OBJ_DIR)/*.o
+	@echo "$(GREEN)Library compiled successfully into libPixelinator.a, remember to copy the headers from the include directory into your new project!$(WHITE)"
+
 	
 # deletes all C ROF files generated thus far
 clean:
