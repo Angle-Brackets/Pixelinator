@@ -156,7 +156,7 @@ void initialize_bitmap(u32 width, u32 height){
     }
 }
 
-void draw_pixel_buffer(){
+static void draw_pixel_buffer(){
     static u32 prev_bitmap_scale_x, prev_bitmap_scale_y;
     static SDL_PixelFormat* format = NULL; //Format
     void* pixels; //Read-Only Pixels read from the image to update (flattened 2D array).
@@ -218,5 +218,16 @@ void draw_pixel_buffer(){
     }
 
     SDL_UnlockTexture(bitmap);
+}
+
+void draw_bitmap(){
+    if (bitmap_initialized) {
+        draw_pixel_buffer();
+        SDL_SetTextureColorMod(bitmap, global.bitmap.tint.r, global.bitmap.tint.g, global.bitmap.tint.b);
+        SDL_RenderCopyEx(global.render.renderer, bitmap, &global.bitmap.transform, NULL, global.bitmap.rotation, NULL, 0);
+    }
+    else {
+        ERROR_EXIT("Bitmap not initialized, make sure that you have enabled the bitmap with the Render Flag BITMAP_ENABLED!")
+    }
 }
 

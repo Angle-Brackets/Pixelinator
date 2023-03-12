@@ -21,15 +21,7 @@ void render_begin(void){
 }
 
 void render_end(void){
-    //Updates bitmap and writes it to a texture.
-
     if(global.engine & FOCUSED || global.render_flags & IGNORE_FOCUS) {
-        if (bitmap_initialized) {
-            draw_pixel_buffer();
-            SDL_SetTextureColorMod(bitmap, global.bitmap.tint.r, global.bitmap.tint.g, global.bitmap.tint.b);
-            //SDL_RenderCopyEx(global.render.renderer, bitmap, &global.bitmap.transform, NULL, global.bitmap.rotation, NULL, 0);
-        }
-
         //Show frame and reset bitmap debug information for next frame.
         SDL_RenderPresent(global.render.renderer);
         global.bitmap.bitmap_updates = 0;

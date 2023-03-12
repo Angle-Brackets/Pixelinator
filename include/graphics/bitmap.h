@@ -59,11 +59,6 @@ void draw_pixel(SDL_Color* color, i32 x, i32 y);
 void draw_pixels_from_surface(SDL_Surface* surface);
 
 /**
- * Draws the pixel buffer stored in memory to a bitmap texture.
- */
-void draw_pixel_buffer();
-
-/**
  * Rotate the bitmap by a given amount of degrees
  * @param degrees 0 - 360 degree rotation on the bitmap after its done rendering (Any values larger are moved into this range)
  */
@@ -103,6 +98,11 @@ void set_bitmap_tint(SDL_Color* color);
  * @param height Height of bitmap in pixels
  */
 void initialize_bitmap(u32 width, u32 height);
+
+/**
+ * Draw the bitmap to the screen, the order in which you call this DOES matter. (For example, render the bitmap, then place text so you can see it!)
+ */
+void draw_bitmap();
 
 //Global texture used for drawing bitmap graphics
 extern SDL_Texture* bitmap;

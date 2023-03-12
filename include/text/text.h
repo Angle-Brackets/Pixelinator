@@ -7,6 +7,11 @@
 #include "../types.h"
 
 typedef FC_Font PIX_Font;
+typedef enum PIX_ALIGN {
+    LEFT = FC_ALIGN_LEFT,
+    CENTER = FC_ALIGN_CENTER,
+    RIGHT = FC_ALIGN_RIGHT
+} PIX_Align;
 
 /**
  * Create a text structure to be used to render strings.
@@ -19,13 +24,14 @@ PIX_Font* load_pix_font(const char* font_path, u32 font_size, SDL_Color color);
 
 //Basically just aliased a function to not confuse people.
 /**
- * @param font PIX_FONT font to render ass
+ * @param font PIX_FONT font to render as
  * @param x f32 x position
  * @param y f32 y position
+ * @param align Pix-Align parameter for how to align the text (left, center, right)
  * @param formatted_text Format string for text
  * @return SDL_Rect the text was rendered to if desired.
  */
-#define render_text(font, x, y, fstring, ...) FC_Draw(font, global.render.renderer, x, y, fstring, ##__VA_ARGS__)
+#define render_text(font, x, y, align, fstring, ...) FC_DrawAlign(font, global.render.renderer, x, y, (FC_AlignEnum)align, fstring, ##__VA_ARGS__)
 
 /**
  * Frees memory associated with a font
