@@ -4,7 +4,6 @@
 #include "core/core.h"
 #include "render/render.h"
 #include "config/config.h"
-#include "input/input.h"
 #include "graphics/bitmap.h"
 #include "audio/sound.h"
 #include "time.h"
@@ -14,7 +13,6 @@ typedef struct global {
     Engine_State engine;
     Render_State render;
     Config_State config;
-    Input_State input;
     Bitmap_State bitmap;
     Time_State time;
     Sound_State sound;

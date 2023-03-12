@@ -1,4 +1,4 @@
-#Compiles the library (Not fully working, headers somehow aren't included)
+#Compiles the library
 cmake_minimum_required(VERSION 3.21)
 project(Pixelinator VERSION 1.0 DESCRIPTION "A 2D Engine using SDL and C")
 set(CMAKE_C_STANDARD 99)

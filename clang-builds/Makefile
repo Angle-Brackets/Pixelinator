@@ -24,7 +24,7 @@ EXE_DIR = executables/
 ROOT = ../
 
 # to add flags to ALL gcc commands, add flags here:
-FLAGS_RELEASE = -Wall -Wextra -Ofast -g -lpthread
+FLAGS_RELEASE = -Wall -Wextra -Ofast -lpthread
 FLAGS_DEBUG = -Wall -Wextra -g -lpthread
 
 # directories used to resolve include preprocessors
@@ -33,6 +33,7 @@ GLAD_INCLUDE = $(ROOT)glad/include/
 SDL_INCLUDE = /Library/Frameworks/SDL2.framework/Headers/
 SDL_IMG_INCLUDE = /Library/Frameworks/SDL2_image.framework/Headers/
 SDL_MIX_INCLUDE = /Library/Frameworks/SDL2_mixer.framework/Headers/
+SDL_TTF_INCLUDE = /Library/Frameworks/SDL2_ttf.framework/Headers/
 
 # Makefile object prereqs for linking
 GLOBAL = $(OBJ_DIR)global.o $(OBJ_DIR)time.o
@@ -64,7 +65,7 @@ compile_osx_debug: $(ALL_REQS)
 	gcc $(ALL_REQS) -F$(FDIR) -framework SDL2 -framework SDL2_mixer -framework SDL2_image $(FLAGS_DEBUG) -o $(EXE_DIR)Pixelinator_DEBUG
 	@echo "$(GREEN)Executable generated! Successfully compiled :D$(WHITE)"
 
-library: compile_osx_release
+library_osx: compile_osx_release
 	@rm $(OBJ_DIR)main.o
 	@echo "$(RED)Deleted main.o, you need to recompile if you want to compile with a main entrypoint$(WHITE)"
 	ar -rc libPixelinator.a $(OBJ_DIR)/*.o
@@ -74,6 +75,7 @@ library: compile_osx_release
 # deletes all C ROF files generated thus far
 clean:
 	rm -r $(OBJ_DIR)
+	rm *.a
 	mkdir $(OBJ_DIR)
 
 # ---- OBJECT FILE TARGETS ----

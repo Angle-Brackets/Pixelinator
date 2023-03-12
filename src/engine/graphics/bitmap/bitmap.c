@@ -1,7 +1,7 @@
 #include <SDL.h>
-#include "../../../../include/util.h"
-#include "../../../../include/global.h"
-#include "../../../../include/graphics/bitmap.h"
+#include "../include/util.h"
+#include "../include/global.h"
+#include "../include/graphics/bitmap.h"
 #include "pixel_threading.h"
 
 static SDL_Color** pixel_buffer = NULL; //2D array that is initialized to be a 2D matrix of pixels that is HEIGHT, WIDTH (rows and cols)
@@ -22,26 +22,20 @@ void set_background_clear(SDL_Color* color){
 }
 
 void set_stroke_fill(SDL_Color* color){
-    global.bitmap.stroke_fill.r = color->r;
-    global.bitmap.stroke_fill.g = color->g;
-    global.bitmap.stroke_fill.b = color->b;
+    global.bitmap.stroke_fill = *color;
 }
 
 void set_shape_fill(SDL_Color* color){
-    global.bitmap.shape_fill.r = color->r;
-    global.bitmap.shape_fill.g = color->g;
-    global.bitmap.shape_fill.b = color->b;
+    global.bitmap.shape_fill = *color;
 }
 
 void set_bitmap_tint(SDL_Color* color){
-    global.bitmap.tint.r = color->r;
-    global.bitmap.tint.g = color->g;
-    global.bitmap.tint.b = color->b;
+    global.bitmap.tint = *color;
 }
 
 void fill_background(SDL_Color *color) {
-    for(i32 i = 0; i < global.bitmap.height; i++){
-        for(i32 j = 0; j < global.bitmap.width; j++){
+    for(u32 i = 0; i < global.bitmap.height; i++){
+        for(u32 j = 0; j < global.bitmap.width; j++){
             draw_pixel(color, j, i);
         }
     }
@@ -66,7 +60,9 @@ void draw_pixel(SDL_Color* color, i32 x, i32 y){
     //Update the pixel buffer, this does not graphics to the screen just yet, we use draw_pixel_buffer() to do that.
     if(color != NULL && *(u32*)&pixel_buffer[y][x] != *(u32*)color){
         pixel_buffer[y][x] = *color;
+        global.bitmap.bitmap_updates++;
     }
+    global.bitmap.bitmap_calls++;
 }
 
 void draw_pixels_from_surface(SDL_Surface* surface){
@@ -118,22 +114,10 @@ void initialize_bitmap(u32 width, u32 height){
         bmp.height = global.render.height;
         bmp.rotation = 0;
 
-        bmp.tint.r = 255;
-        bmp.tint.g = 255;
-        bmp.tint.b = 255;
-
-        bmp.stroke_fill.r = 0;
-        bmp.stroke_fill.g = 0;
-        bmp.stroke_fill.b = 0;
-
-        bmp.shape_fill.r = 255;
-        bmp.shape_fill.g = 255;
-        bmp.shape_fill.b = 255;
-
-        bmp.transform.x = 0;
-        bmp.transform.y = 0;
-        bmp.transform.w = global.render.width;
-        bmp.transform.h = global.render.height;
+        bmp.tint = (SDL_Color){255,255,255};
+        bmp.stroke_fill = (SDL_Color){0,0,0};
+        bmp.shape_fill = (SDL_Color){255,255,255};
+        bmp.transform = (SDL_Rect){.x = 0, .y = 0, .w = global.render.width, .h = global.render.height};
 
         if(width > 0)
             bmp.width = width;
@@ -173,22 +157,33 @@ void initialize_bitmap(u32 width, u32 height){
 }
 
 void draw_pixel_buffer(){
-    SDL_PixelFormat* format = SDL_AllocFormat(SDL_PIXELFORMAT_RGBA32); //Format (really want this to be static...)
+    static u32 prev_bitmap_scale_x, prev_bitmap_scale_y;
+    static SDL_PixelFormat* format = NULL; //Format
     void* pixels; //Read-Only Pixels read from the image to update (flattened 2D array).
     u32* current_row; //Current row of pixels we're writing to.
     i32 pitch; //Length of one row in bytes...I have no idea why it's called pitch.
+
+    prev_bitmap_scale_x = bitmap_scale_x;
+    prev_bitmap_scale_y = bitmap_scale_y;
 
     //Need to reset the texture in case the window size changed.
     bitmap_scale_x = global.render.width / global.bitmap.width;
     bitmap_scale_y = global.render.height / global.bitmap.height;
 
-    SDL_DestroyTexture(bitmap);
-    bitmap = SDL_CreateTexture(global.render.renderer, SDL_PIXELFORMAT_RGBA32, SDL_TEXTUREACCESS_STREAMING, global.bitmap.width * bitmap_scale_x, global.bitmap.height * bitmap_scale_y);
+    if(bitmap == NULL || prev_bitmap_scale_x != bitmap_scale_x || prev_bitmap_scale_y != bitmap_scale_y) {
+        SDL_DestroyTexture(bitmap);
+        bitmap = SDL_CreateTexture(global.render.renderer, SDL_PIXELFORMAT_RGBA32, SDL_TEXTUREACCESS_STREAMING,
+                                   global.bitmap.width * bitmap_scale_x, global.bitmap.height * bitmap_scale_y);
+    }
 
     if(SDL_LockTexture(bitmap, NULL, &pixels, &pitch) != 0){
         //Just exits and retries to render this the next frame.
         //We do this to just avoid a crash and this only happens if the window size changes rapidly.
         return;
+    }
+
+    if(format == NULL){
+        format = SDL_AllocFormat(SDL_PIXELFORMAT_RGBA32);
     }
 
     //The reason why we need to update all the pixels is that it is not a safe assumption to say that
@@ -202,8 +197,8 @@ void draw_pixel_buffer(){
         process_pixels(pixels, pixel_buffer, format, global.bitmap.width, global.bitmap.height, pitch, bitmap_scale_x, bitmap_scale_y);
     }
     else {
-        for (int i = 0; i < global.bitmap.height; i++) {
-            for (int j = 0; j < global.bitmap.width; j++) {
+        for (u32 i = 0; i < global.bitmap.height; i++) {
+            for (u32 j = 0; j < global.bitmap.width; j++) {
                 u32 color = SDL_MapRGBA(format,
                                         pixel_buffer[i][j].r,
                                         pixel_buffer[i][j].g,
@@ -211,9 +206,9 @@ void draw_pixel_buffer(){
                                         pixel_buffer[i][j].a);
 
                 //Rescaling the bitmap pixels to fit a larger resolution
-                for (int y = 0; y < bitmap_scale_y; y++) {
+                for (u32 y = 0; y < bitmap_scale_y; y++) {
                     current_row = (u32 *) ((u8 *) pixels + (i * bitmap_scale_y + y) * pitch);
-                    for (int x = 0; x < bitmap_scale_x; x++) {
+                    for (u32 x = 0; x < bitmap_scale_x; x++) {
                         current_row[j * bitmap_scale_x + x] = color;
                     }
                 }
@@ -223,6 +218,5 @@ void draw_pixel_buffer(){
     }
 
     SDL_UnlockTexture(bitmap);
-    SDL_FreeFormat(format);
 }
 

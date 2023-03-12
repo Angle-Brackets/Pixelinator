@@ -14,6 +14,10 @@ typedef struct bitmap_state {
     SDL_Color stroke_fill;
     SDL_Color shape_fill;
     SDL_Rect transform;
+
+    //Debug/Performance Logging Features
+    u32 bitmap_calls; //Number of pixels attempted to be drawn to the bitmap in a frame.
+    u32 bitmap_updates; //Number of pixels updated by the bitmap per frame.
 } Bitmap_State;
 /**
  * Sets the clear color (color used after rendering a frame) of the window

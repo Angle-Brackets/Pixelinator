@@ -1,10 +1,10 @@
-#include "../../../include/core/core.h"
-#include "../../../include/util.h"
-#include "../../../include/time.h"
-#include "../../../include/input/input.h"
-#include "../../../include/audio/sound.h"
-#include "../../../include/graphics/bitmap.h"
-#include "../../../include/global.h"
+#include "core/core.h"
+#include "util.h"
+#include "time.h"
+#include "input/input.h"
+#include "audio/sound.h"
+#include "graphics/bitmap.h"
+#include "global.h"
 
 static bool running = false;
 static void (*draw)() = NULL;
