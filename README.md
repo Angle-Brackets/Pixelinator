@@ -3,7 +3,7 @@
 </p>
 
 <h3 align="center">
-Version 1.0
+Version 1.1
 </h3>
 
 This is a simple 2D engine written in C using the SDL Library + OpenGL, primarily designed for bitmap graphics,
@@ -17,10 +17,12 @@ but technically does support other OpenGL primitives.
 - Rudimentary support for loading PNGs as bitmaps (must be RGBA format) and loading custom file
   formats like ``.ini`` through the config header.
 - Engine automatically pauses all processes if focus is lost to save resources (can be disabled if wanted).
+- TTF Text Rendering Support!
+- Support for Sprites and Drawing from Sprite Sheets with Bitmap Graphics.
 - Statically link the library to include and use in your own projects!
 
 ## In Progress
-- Text Rendering!
+- Optimizations mostly
 
 ## Other Contributors
 - Thank you to [@rishitkhare](https://github.com/rishitkhare) for the logo, initial testing, and code contributions!

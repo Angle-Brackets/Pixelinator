@@ -5,6 +5,7 @@
 #include <math.h>
 #include <stdbool.h>
 #include "../types.h"
+#include "sprite.h"
 
 typedef struct bitmap_state {
     u32 width;
@@ -50,6 +51,12 @@ void fill_background(SDL_Color* color);
  * @param y
  */
 void draw_pixel(SDL_Color* color, i32 x, i32 y);
+
+/**
+ * Draws a sprite to the bitmap.
+ * @param sprite
+ */
+void draw_sprite_to_bitmap(sprite_t* sprite);
 
 /**
  * Draw pixels from a given texture into the bitmap

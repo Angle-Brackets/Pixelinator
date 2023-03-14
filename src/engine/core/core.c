@@ -67,8 +67,8 @@ i32 initialize(u32 window_width, u32 window_height, u32 bitmap_width, u32 bitmap
     //Verify bounds
     VERIFY_LOW_BOUND(window_width, 0, "width")
     VERIFY_LOW_BOUND(window_height, 0, "height")
-    VERIFY_LOW_BOUND(bitmap_width, window_width, "bitmap width")
-    VERIFY_LOW_BOUND(bitmap_height, window_height, "bitmap height")
+    VERIFY_LOW_BOUND(window_width, bitmap_width, "window width")
+    VERIFY_LOW_BOUND(window_height, bitmap_height, "window height")
     VERIFY_LOW_BOUND(max_fps, 0, "maximum fps")
     VERIFY_LOW_BOUND(volume, 0, "volume")
 

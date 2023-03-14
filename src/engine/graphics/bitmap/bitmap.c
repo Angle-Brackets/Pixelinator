@@ -65,12 +65,33 @@ void draw_pixel(SDL_Color* color, i32 x, i32 y){
     global.bitmap.bitmap_calls++;
 }
 
+void draw_sprite_to_bitmap(sprite_t* sprite){
+    static bool usable_color = true; //If the color is not ignored, this is true.
+    for(i32 i = 0; i < sprite->height; i++){
+        for(i32 j = 0; j < sprite->width; j++){
+            //Check for ignored colors, TODO: Use a set here!
+            for(i32 k = 0; k < sprite->sheet->ignored_colors_len; k++){
+                if(sprite->sprite_data[i][j].r == sprite->sheet->ignored_colors[k].r && sprite->sprite_data[i][j].g == sprite->sheet->ignored_colors[k].g && sprite->sprite_data[i][j].b == sprite->sheet->ignored_colors[k].b){
+                    usable_color = false;
+                    break;
+                }
+            }
+
+            if(usable_color){
+                draw_pixel(&sprite->sprite_data[i][j], sprite->x + j, sprite->y + i);
+            }
+
+            usable_color = true;
+        }
+    }
+}
+
 void draw_pixels_from_surface(SDL_Surface* surface){
     u32* current_row;
 
-    for(int y = 0; y < surface->h; y++){
+    for(i32 y = 0; y < surface->h; y++){
         current_row = (u32 *)((u8 *) surface->pixels + y * surface->pitch);
-        for(int x = 0; x < surface->w; x++){
+        for(i32 x = 0; x < surface->w; x++){
             draw_pixel((SDL_Color*)&current_row[x], x, y);
         }
     }
