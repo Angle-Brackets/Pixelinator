@@ -28,13 +28,9 @@ but technically does support other OpenGL primitives.
 - Thank you to [@rishitkhare](https://github.com/rishitkhare) for the logo, initial testing, and code contributions!
 
 ## Installation
-- There is a Makefile inside clang-builds (should also work with gcc but not tested) that will compile all of the code correctly
-  for MacOS and in theory Linux as well. Make sure that you have the SDL2, SDL2_Mixer, SDL2_Image, and glad libraries installed beforehand.
-  You should then be able to compile them on Mac and Linux with the respective Makefile or CMakeLists.
-- **READ IF YOU WANT TO USE THE LIBRARY**: To compile this library use the Makefile located in clang-builds and use the 
-  ``make library`` rule to generate ``libPixelinator.a`` file. Make sure you copy the headers located in the ``include`` folder
-  to be able to access the methods in the library (and also have the SDL dependencies installed on your system). We hope you enjoy
-  using the Pixelinator Engine and only ask that you give credit if you do use it!
+- There is a CMakeLists.txt file within the ``include`` directory, just run `cmake .` while inside that directory in your terminal and then
+run ``make`` to generate the `libPixelinator.a` file. This is the entire codebase as a library now!
+- Make sure that when you link the library, include all the headers in the include directory in your project along with the SDL dependencies!
 
 ### Examples
 1. Bitmap graphics example

@@ -41,11 +41,17 @@ sprite_sheet* create_sprite_sheet(const char* file_path, SDL_Color* ignored_colo
     VERIFY_HEAP_DATA(sheet)
     sheet->sheet_path = file_path;
 
-    sheet->ignored_colors = (SDL_Color*)malloc(sizeof(SDL_Color) * ignored_colors_len);
-    sheet->ignored_colors_len = ignored_colors_len;
-    VERIFY_HEAP_DATA(sheet->ignored_colors)
-    for(u32 i = 0; i < ignored_colors_len; i++){
-        sheet->ignored_colors[i] = ignored_colors[i];
+    if(ignored_colors != NULL) {
+        sheet->ignored_colors = (SDL_Color *) malloc(sizeof(SDL_Color) * ignored_colors_len);
+        sheet->ignored_colors_len = ignored_colors_len;
+        VERIFY_HEAP_DATA(sheet->ignored_colors)
+        for (u32 i = 0; i < ignored_colors_len; i++) {
+            sheet->ignored_colors[i] = ignored_colors[i];
+        }
+    }
+    else {
+        sheet->ignored_colors = NULL;
+        ignored_colors_len = 0;
     }
 
     //Loads up the surface data!

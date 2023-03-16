@@ -1,8 +1,7 @@
 .idea/
 .DS_Store
 cmake-build-debug/
-clang-builds/objects/
-clang-builds/executables/
+clang-builds/
 demo_imgs/
 demos/demo.txt
 glad/

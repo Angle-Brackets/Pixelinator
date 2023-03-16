@@ -19,6 +19,7 @@ static sprite_t* spriteA;
 static sprite_sheet* sheetA;
 
 void draw() {
+    static u32 sx = 0, sy = 0;
     static u32 frame = 0;
     static bool paused = false;
     static SDL_RWops *io = NULL;
@@ -55,11 +56,15 @@ void draw() {
         x += 10;
     }
 
+    if(get_key_state_str("A") & KS_HELD){
+        sy += 1;
+    }
+
     //Draw Elements
     io = SDL_RWFromFile("../assets/MLTopFloor.png", "rb");
     bg = IMG_LoadPNG_RW(io);
     draw_pixels_from_surface(bg);
-    update_sprite_from_spritesheet(spriteA, 2 + frame * 50, 2, 0, 0, 50, 50);
+    update_sprite_from_spritesheet(spriteA, 2 + frame * 50, 2 + sy, 0, 0, 50, 50);
     draw_sprite_to_bitmap(spriteA);
 
     static bool inc = false;
@@ -78,7 +83,7 @@ void draw() {
 }
 
 i32 main(){
-    initialize(BMPW * 3, BMPH * 3, BMPW, BMPH, 120, 15, MULTITHREADING_ENABLED | BITMAP_ACTIVE | IGNORE_FOCUS, 0, draw);
+    initialize(WIDTH, HEIGHT, BMPW, BMPH, 120, 15, MULTITHREADING_ENABLED | BITMAP_ACTIVE | IGNORE_FOCUS, 0, draw);
 
     PIX_Font* font;
     font = load_pix_font("../assets/pixel-emulator-font/PixelEmulator-xq08.ttf", 25, (SDL_Color){255,0,0,255});

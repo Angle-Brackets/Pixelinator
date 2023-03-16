@@ -1,7 +1,6 @@
 #include <SDL.h>
 #include "../include/util.h"
 #include "../include/global.h"
-#include "../include/graphics/bitmap.h"
 #include "pixel_threading.h"
 
 static SDL_Color** pixel_buffer = NULL; //2D array that is initialized to be a 2D matrix of pixels that is HEIGHT, WIDTH (rows and cols)
