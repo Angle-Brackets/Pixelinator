@@ -1,7 +1,7 @@
 #ifndef SDLCENGINE_RENDER_H
 #define SDLCENGINE_RENDER_H
 #include <SDL.h>
-#include "../types.h"
+#include "types.h"
 
 //Stored in an 4 byte unsigned integer.
 //Could also be stored in a union, but this is more flexible.

@@ -40,12 +40,14 @@ GLOBAL = $(OBJ_DIR)global.o $(OBJ_DIR)time.o
 RENDER = $(OBJ_DIR)render_init.o $(OBJ_DIR)render.o
 IO = $(OBJ_DIR)io.o
 INPUT = $(OBJ_DIR)input.o
-GRAPHICS = $(OBJ_DIR)bitmap.o $(OBJ_DIR)pixel_threading.o $(OBJ_DIR)shapes.o
+GRAPHICS = $(OBJ_DIR)bitmap.o $(OBJ_DIR)pixel_threading.o $(OBJ_DIR)shapes.o $(OBJ_DIR)sprite.o
 CORE = $(OBJ_DIR)core.o
 CONFIG = $(OBJ_DIR)config.o
 AUDIO = $(OBJ_DIR)sound.o
+TEXT = $(OBJ_DIR)text.o
+FONT_CACHE = $(OBJ_DIR)font_cache.o
 
-ALL_REQS = $(OBJ_DIR)main.o $(GLOBAL) $(RENDER) $(IO) $(INPUT) $(GRAPHICS) $(CORE) $(CONFIG) $(AUDIO)
+ALL_REQS = $(GLOBAL) $(RENDER) $(IO) $(INPUT) $(GRAPHICS) $(CORE) $(CONFIG) $(AUDIO) $(FONT_CACHE) $(TEXT)
 
 #Colors
 RED = \033[0;31m
@@ -82,7 +84,7 @@ clean:
 
 $(OBJ_DIR)main.o:
 	mkdir -p $(OBJ_DIR)
-	gcc $(ROOT)main.c $(FLAGS) -F$(FDIR) -I$(GLAD_INCLUDE) -I$(SDL_INCLUDE) -I$(SDL_MIX_INCLUDE) -c -o $(OBJ_DIR)main.o
+	gcc $(ROOT)main.c $(FLAGS) -F$(FDIR) -I$(GLAD_INCLUDE) -I$(SDL_INCLUDE) -I$(SDL_MIX_INCLUDE) -I$(SDL_IMG_INCLUDE) -I$(SDL_TTF_INCLUDE) -c -o $(OBJ_DIR)main.o
 
 $(OBJ_DIR)render.o:
 	gcc $(ROOT)src/engine/render/render.c $(FLAGS) -F$(FDIR) -I$(SDL_INCLUDE) -I$(SDL_MIX_INCLUDE) -c -o $(OBJ_DIR)render.o
@@ -119,6 +121,15 @@ $(OBJ_DIR)shapes.o:
 
 $(OBJ_DIR)sound.o:
 	gcc $(ROOT)src/engine/audio/sound.c $(FLAGS) -F$(FDIR) -I$(SDL_INCLUDE) -I$(SDL_MIX_INCLUDE) -c -o $(OBJ_DIR)sound.o
+
+$(OBJ_DIR)text.o:
+	gcc $(ROOT)src/engine/text/text.c $(FLAGS) -F$(FDIR) -I$(SDL_INCLUDE) -I$(SDL_MIX_INCLUDE) -c -o $(OBJ_DIR)text.o
+
+$(OBJ_DIR)font_cache.o:
+	gcc $(ROOT)src/engine/font_cache/SDL_FontCache.c $(FLAGS) -F$(FDIR) -I$(SDL_INCLUDE) -I$(SDL_MIX_INCLUDE) -c -o $(OBJ_DIR)font_cache.o
+
+$(OBJ_DIR)sprite.o:
+	gcc $(ROOT)src/engine/graphics/sprite/sprite.c $(FLAGS) -F$(FDIR) -I$(SDL_INCLUDE) -I$(SDL_MIX_INCLUDE) -c -o $(OBJ_DIR)sprite.o
 
 $(OBJ_DIR)core.o:
 	gcc $(ROOT)src/engine/core/core.c $(FLAGS) -F$(FDIR) -I$(SDL_INCLUDE) -I$(SDL_MIX_INCLUDE) -c -o $(OBJ_DIR)core.o

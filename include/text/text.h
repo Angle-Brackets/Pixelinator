@@ -1,10 +1,10 @@
 #ifndef PIXELINATOR_TEXT_H
 #define PIXELINATOR_TEXT_H
 
-#include <SDL2/SDL.h>
+#include <SDL.h>
 #include <stdbool.h>
-#include "../../src/engine/font_cache/SDL_FontCache.h"
-#include "../types.h"
+#include "../../../SDLCEngine/src/engine/font_cache/SDL_FontCache.h"
+#include "types.h"
 #include "util.h"
 
 typedef FC_Font PIX_Font;

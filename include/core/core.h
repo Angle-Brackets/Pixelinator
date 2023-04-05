@@ -2,8 +2,8 @@
 #define SDLCENGINE_CORE_H
 
 #include <SDL_mixer.h>
-#include "../types.h"
-#include "../render/render.h"
+#include "types.h"
+#include "render/render.h"
 
 #define VERIFY_LOW_BOUND(x, min, name) {if(x < min){fprintf(stderr, "Illegal value for %s passed.\n", name); return 1;}} //Validates if an entered value is not lower than a given value. Can't check a max because multiple monitors might screw with it too much.
 

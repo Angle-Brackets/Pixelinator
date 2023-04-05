@@ -1,8 +1,8 @@
 #ifndef PIXELINATOR_SPRITE_H
 #define PIXELINATOR_SPRITE_H
-#include <SDL2/SDL.h>
+#include <SDL.h>
 #include <stdbool.h>
-#include "../types.h"
+#include "types.h"
 
 typedef struct SPRITE_SHEET {
     const char* sheet_path;

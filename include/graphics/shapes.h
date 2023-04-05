@@ -1,4 +1,4 @@
-#include "../types.h"
+#include "types.h"
 #include "bitmap.h"
 
 #ifndef SDLCENGINE_SHAPES_H

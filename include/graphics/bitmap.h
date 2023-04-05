@@ -4,7 +4,7 @@
 #include <SDL.h>
 #include <math.h>
 #include <stdbool.h>
-#include "../types.h"
+#include "types.h"
 #include "sprite.h"
 
 typedef struct bitmap_state {
@@ -64,6 +64,21 @@ void draw_sprite_to_bitmap(sprite_t* sprite);
  * @param surface
  */
 void draw_pixels_from_surface(SDL_Surface* surface);
+
+/**
+ * Gets the pixel located in the BITMAP at (x,y) [x and y are not necessarily screen space coordinates, they relate to the bitmap only]
+ * @param x X position of pixel
+ * @param y Y position of the pixel
+ * @return The pixel information at (x,y) in the bitmap. If an invalid position is passed, NULL is returned. Modifying the struct will modify the pixel!
+ */
+SDL_Color* get_pixel(u32 x, u32 y);
+
+/**
+ * Get the entire bitmap pixel buffer. Any modifications done to the buffer ARE reflected in the actual bitmap, so be weary!
+ * The buffer is a 2D array of SDL_Color structs where each position corresponds to a pixel.
+ * @return Address to the pixel buffer
+ */
+SDL_Color** get_pixel_buffer();
 
 /**
  * Rotate the bitmap by a given amount of degrees

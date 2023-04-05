@@ -96,6 +96,25 @@ void draw_pixels_from_surface(SDL_Surface* surface){
     }
 }
 
+SDL_Color* get_pixel(u32 x, u32 y){
+    if(!bitmap_initialized){
+        ERROR_RETURN(NULL, "Bitmap not initialized! Make sure you have the render flag BITMAP_ENABLED on and call initialize_bitmap()!\n")
+    }
+
+    if(x < 0 || x >= global.bitmap.width || y < 0 || y >= global.bitmap.height){
+        ERROR_RETURN(NULL, "Invalid bitmap coordinates provided.\n")
+    }
+
+    return &pixel_buffer[y][x];
+}
+
+SDL_Color** get_pixel_buffer(){
+    if(pixel_buffer == NULL){
+        ERROR_EXIT("Pixel Buffer not initialized, make sure that you have enabled the bitmap with the Render Flag BITMAP_ENABLED!")
+    }
+    return pixel_buffer;
+}
+
 void rotate_bitmap_deg(u32 degrees) {
     global.bitmap.rotation = degrees % 360;
 }
