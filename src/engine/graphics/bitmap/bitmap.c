@@ -69,10 +69,14 @@ void draw_sprite_to_bitmap(sprite_t* sprite){
     for(i32 i = 0; i < sprite->height; i++){
         for(i32 j = 0; j < sprite->width; j++){
             //Check for ignored colors, TODO: Use a set here!
-            for(i32 k = 0; k < sprite->sheet->ignored_colors_len; k++){
-                if(sprite->sprite_data[i][j].r == sprite->sheet->ignored_colors[k].r && sprite->sprite_data[i][j].g == sprite->sheet->ignored_colors[k].g && sprite->sprite_data[i][j].b == sprite->sheet->ignored_colors[k].b){
-                    usable_color = false;
-                    break;
+            if(sprite->sheet != NULL) {
+                for (i32 k = 0; k < sprite->sheet->ignored_colors_len; k++) {
+                    if (sprite->sprite_data[i][j].r == sprite->sheet->ignored_colors[k].r &&
+                        sprite->sprite_data[i][j].g == sprite->sheet->ignored_colors[k].g &&
+                        sprite->sprite_data[i][j].b == sprite->sheet->ignored_colors[k].b) {
+                        usable_color = false;
+                        break;
+                    }
                 }
             }
 
