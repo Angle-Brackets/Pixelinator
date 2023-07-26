@@ -37,4 +37,5 @@ run ``make`` to generate the `libPixelinator.a` file. This is the entire codebas
 ![alt text](imgs/bitmapexample1.png?raw=true)
 2. Bitmap Graphics Example 2 (Runs at full speed in engine)
 ![alt text](imgs/demo2.gif?raw=true)
-
+3. Bitmap Graphics Example 3 (Runs at full speed in engine at 60fps)
+![alt text](imgs/s3gif.gif)

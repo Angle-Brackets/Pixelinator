@@ -56,7 +56,7 @@ void draw_pixel(SDL_Color* color, i32 x, i32 y){
     if(x < 0 || x >= global.bitmap.width || y < 0 || y >= global.bitmap.height)
         return;
 
-    //Update the pixel buffer, this does not graphics to the screen just yet, we use draw_pixel_buffer() to do that.
+    //Update the pixel buffer, this does not draw graphics to the screen just yet, we use draw_pixel_buffer() to do that.
     if(color != NULL && *(u32*)&pixel_buffer[y][x] != *(u32*)color){
         pixel_buffer[y][x] = *color;
         global.bitmap.bitmap_updates++;
