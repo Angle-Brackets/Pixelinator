@@ -1,29 +1,32 @@
 #include <stdio.h>
 #include <stdbool.h>
-#include <SDL2/SDL.h>
-#include <SDL_image.h>
-#include "include/graphics/shapes.h"
-#include "include/global.h"
+#include <SDL.h>
+#include "graphics/shapes.h"
+#include "global.h"
 #include "core/core.h"
-#include "text/text.h"
 
-#define BMPW 256
-#define BMPH 384
-#define WIDTH 1920
-#define HEIGHT 1080
+#define WIDTH 750
+#define HEIGHT 750
+
+static i32 circle_num = 1;
+static i32 circle_capacity = 2;
+
+struct Circle {
+    u32 x;
+    u32 y;
+    u32 r;
+    f32 velocity[2];
+    SDL_Color color;
+};
+
+struct Circle* circles;
 
 SDL_Color A = {0, 0, 0, 255};
 SDL_Color B = {255, 255, 255, 0};
 SDL_Color C = {255, 0, 0, 0};
-static sprite_t* spriteA;
-static sprite_sheet* sheetA;
 
 void draw() {
-    static u32 sx = 0, sy = 0;
-    static u32 frame = 0;
     static bool paused = false;
-    static SDL_RWops *io = NULL;
-    static SDL_Surface* bg = NULL;
 
     if (get_key_state_str("Escape") & KS_PRESSED) {
         exit_program();
@@ -57,45 +60,77 @@ void draw() {
     }
 
     if(get_key_state_str("A") & KS_HELD){
-        sy += 1;
+        if(circle_capacity == circle_num){
+            circle_capacity *= 2;
+            circles = (struct Circle*)realloc(circles, sizeof(struct Circle) * circle_capacity);
+        }
+
+        struct Circle c = {
+                .r = arc4random() % 100,
+                .x = arc4random() % WIDTH,
+                .y = arc4random() % HEIGHT,
+                .velocity = {(arc4random() % 10) + 5, (arc4random() % 10) + 5},
+                .color = {arc4random() % 255, arc4random() % 255, arc4random() % 255}
+        };
+
+        circles[circle_num] = c;
+        circle_num++;
+
+        printf("%i circles drawn\n", circle_num);
+    }
+
+    if(get_key_state_str("R") & KS_HELD){
+        if(circle_num > 0) {
+            circles[circle_num--] = (struct Circle) {0};
+            printf("%i circles drawn\n", circle_num);
+        }
     }
 
     //Draw Elements
-    io = SDL_RWFromFile("../assets/MLTopFloor.png", "rb");
-    bg = IMG_LoadPNG_RW(io);
-    draw_pixels_from_surface(bg);
-    update_sprite_from_spritesheet(spriteA, 2 + frame * 50, 2 + sy, 0, 0, 50, 50);
-    draw_sprite_to_bitmap(spriteA);
+    fill_background(&B);
 
-    static bool inc = false;
-    if(inc)
-        frame = (frame + 1) % 38;
-    inc = !inc;
+    for (i32 i = 0; i < circle_num; i++) {
+        set_shape_fill(&circles[i].color);
+        set_stroke_fill(&circles[i].color);
+        if (!paused) {
+            circles[i].x += circles[i].velocity[0];
+            circles[i].y += circles[i].velocity[1];
 
+            if (circles[i].x <= 0 || circles[i].x >= WIDTH) {
+                circles[i].velocity[0] *= -1;
+            }
+            if (circles[i].y <= 0 || circles[i].y >= HEIGHT) {
+                circles[i].velocity[1] *= -1;
+            }
+        }
+        draw_circle(circles[i].x, circles[i].y, circles[i].r);
+        set_stroke_fill(&A);
+    }
+
+    bitmap_scale(s, s);
+    bitmap_shift(x, 0);
     draw_bitmap();
-    render_text(NULL, global.render.width, 0, RIGHT, "FPS: %u\nUpdates: %u", global.time.frame_rate, global.bitmap.bitmap_updates);
 
     static char buffer[20];
     snprintf(buffer, 20, "Engine - %u", global.time.frame_rate);
     SDL_SetWindowTitle(global.render.window, buffer);
-    SDL_FreeSurface(bg);
-    SDL_RWclose(io);
 }
 
 i32 main(){
-    initialize(WIDTH, HEIGHT, BMPW, BMPH, 120, 15, MULTITHREADING_ENABLED | BITMAP_ACTIVE | IGNORE_FOCUS, 0, draw);
+    initialize(WIDTH, HEIGHT, WIDTH, HEIGHT, 120, 15, MULTITHREADING_ENABLED | BITMAP_ACTIVE | IGNORE_FOCUS, 0, draw);
+    circles = (struct Circle*)malloc(sizeof(struct Circle) * circle_capacity);
 
-    PIX_Font* font;
-    font = load_pix_font("../assets/pixel-emulator-font/PixelEmulator-xq08.ttf", 25, (SDL_Color){255,0,0,255});
-    set_default_font(font);
+    for (i32 i = 0; i < circle_num; i++) {
+        circles[i].r = arc4random() % 100;
+        circles[i].x = arc4random() % WIDTH;
+        circles[i].y = arc4random() % HEIGHT;
+        circles[i].velocity[0] = (arc4random() % 10) + 5;
+        circles[i].velocity[1] = (arc4random() % 10) + 5;
 
-    SDL_Color bad_colors[2] = {{0,174,174}, {0,174,0}};
-    sheetA = create_sprite_sheet("../assets/MarioSpriteSheet.png", bad_colors, 2);
-    spriteA = create_sprite(52, BMPH/2, 50, 50, sheetA);
-
+        circles[i].color.r = arc4random() % 255;
+        circles[i].color.g = arc4random() % 255;
+        circles[i].color.b = arc4random() % 255;
+    }
 
     start();
 }
-
-
-

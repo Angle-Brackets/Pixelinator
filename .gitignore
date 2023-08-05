@@ -5,6 +5,6 @@ clang-builds/
 demo_imgs/
 demos/demo.txt
 glad/
-demos/
 assets/
+include/CMakeFiles/
 *.mp3
