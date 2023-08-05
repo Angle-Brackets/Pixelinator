@@ -1,0 +1,14 @@
+/Users/ankitjoju/Desktop/Programs/Side Projects/Pixelinator/include/CMakeFiles/Pixelinator.dir
+/Users/ankitjoju/Desktop/Programs/Side Projects/Pixelinator/include/CMakeFiles/edit_cache.dir
+/Users/ankitjoju/Desktop/Programs/Side Projects/Pixelinator/include/CMakeFiles/rebuild_cache.dir
+/Users/ankitjoju/Desktop/Programs/Side Projects/Pixelinator/include/CMakeFiles/list_install_components.dir
+/Users/ankitjoju/Desktop/Programs/Side Projects/Pixelinator/include/CMakeFiles/install.dir
+/Users/ankitjoju/Desktop/Programs/Side Projects/Pixelinator/include/CMakeFiles/install/local.dir
+/Users/ankitjoju/Desktop/Programs/Side Projects/Pixelinator/include/CMakeFiles/install/strip.dir
+/Users/ankitjoju/Desktop/Programs/Side Projects/Pixelinator/src/engine/glad/CMakeFiles/glad.dir
+/Users/ankitjoju/Desktop/Programs/Side Projects/Pixelinator/src/engine/glad/CMakeFiles/edit_cache.dir
+/Users/ankitjoju/Desktop/Programs/Side Projects/Pixelinator/src/engine/glad/CMakeFiles/rebuild_cache.dir
+/Users/ankitjoju/Desktop/Programs/Side Projects/Pixelinator/src/engine/glad/CMakeFiles/list_install_components.dir
+/Users/ankitjoju/Desktop/Programs/Side Projects/Pixelinator/src/engine/glad/CMakeFiles/install.dir
+/Users/ankitjoju/Desktop/Programs/Side Projects/Pixelinator/src/engine/glad/CMakeFiles/install/local.dir
+/Users/ankitjoju/Desktop/Programs/Side Projects/Pixelinator/src/engine/glad/CMakeFiles/install/strip.dir
