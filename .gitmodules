@@ -10,7 +10,7 @@
 	path = external/sdl-ttf
 	url = https://github.com/libsdl-org/SDL_ttf.git
 	branch = SDL2
-[submodule "sdl-mixer"]
-	path = sdl-mixer
+[submodule "external/sdl-mixer"]
+	path = external/sdl-mixer
 	url = https://github.com/libsdl-org/SDL_mixer.git
 	branch = SDL2

@@ -1,4 +1,4 @@
-if(${CMAKE_CURRENT_SOURCE_DIR} STREQUAL ${CMAKE_CURRENT_BINARY_DIR})
+if(. STREQUAL ${CMAKE_CURRENT_BINARY_DIR})
   message(FATAL_ERROR "Prevented in-tree build. Please create a build directory outside of the SDL source code and run \"cmake -S ${CMAKE_SOURCE_DIR} -B .\" from there")
 endif()
 
@@ -233,7 +233,7 @@ if(USE_GCC OR USE_CLANG OR USE_INTELCC)
 endif()
 
 # Default option knobs
-if(UNIX OR MINGW OR MSYS OR (USE_CLANG AND NOT WINDOWS) OR VITA OR PSP OR PS2 OR N3DS)
+if(UNIX OR mingw OR MSYS OR (USE_CLANG AND NOT WINDOWS) OR VITA OR PSP OR PS2 OR N3DS)
   set(OPT_DEF_LIBC ON)
 endif()
 
@@ -662,7 +662,7 @@ if(USE_GCC OR USE_CLANG OR USE_INTELCC)
     endif()
   endif()
 
-  if(MINGW)
+  if(mingw)
     # See if GCC's -gdwarf-4 is supported
     # See https://gcc.gnu.org/bugzilla/show_bug.cgi?id=101377 for why this is needed on Windows
     cmake_push_check_state(RESET)
@@ -970,7 +970,7 @@ endif()
 # TODO: Can't deactivate on FreeBSD? w/o LIBC, SDL_stdinc.h can't define
 # anything.
 if(SDL_LIBC)
-  if(WINDOWS AND NOT MINGW)
+  if(WINDOWS AND NOT mingw)
     set(HAVE_LIBC TRUE)
     check_include_file(stdint.h HAVE_STDINT_H)
     foreach(_HEADER stdio.h string.h wchar.h ctype.h math.h limits.h)
@@ -1728,7 +1728,7 @@ elseif(WINDOWS)
     if(DEFINED MSVC_VERSION AND NOT ${MSVC_VERSION} LESS 1700)
         set(USE_WINSDK_DIRECTX TRUE)
     endif()
-    if(NOT MINGW AND NOT USE_WINSDK_DIRECTX)
+    if(NOT mingw AND NOT USE_WINSDK_DIRECTX)
       if("$ENV{DXSDK_DIR}" STREQUAL "")
         message_error("DIRECTX requires the \$DXSDK_DIR environment variable to be set")
       endif()
@@ -1754,7 +1754,7 @@ elseif(WINDOWS)
     check_include_file(dxgi.h HAVE_DXGI_H)
     if(HAVE_D3D_H OR HAVE_D3D11_H OR HAVE_D3D12_H OR HAVE_DDRAW_H OR HAVE_DSOUND_H OR HAVE_DINPUT_H)
       set(HAVE_DIRECTX TRUE)
-      if(NOT MINGW AND NOT USE_WINSDK_DIRECTX)
+      if(NOT mingw AND NOT USE_WINSDK_DIRECTX)
       # TODO: change $ENV{DXSDL_DIR} to get the path from the include checks
         target_link_directories(sdl-build-options INTERFACE "$$ENV{DXSDK_DIR}\\lib\\${PROCESSOR_ARCH}")
         target_include_directories(sdl-build-options INTERFACE "$ENV{DXSDK_DIR}\\Include")
@@ -2004,7 +2004,7 @@ elseif(WINDOWS)
 
   file(GLOB VERSION_SOURCES ${SDL2_SOURCE_DIR}/src/main/windows/*.rc)
   file(GLOB SDLMAIN_SOURCES ${SDL2_SOURCE_DIR}/src/main/windows/*.c)
-  if(MINGW OR CYGWIN)
+  if(mingw OR CYGWIN)
     if(NOT SDL2_DISABLE_SDL2MAIN)
       list(APPEND SDL_CFLAGS "-Dmain=SDL_main")
       list(INSERT SDL_LIBS 0 "-lSDL2main")
@@ -2997,7 +2997,7 @@ find_package(Git)
 if(Git_FOUND)
   execute_process(COMMAND
     "${GIT_EXECUTABLE}" describe --always --tags --long
-    WORKING_DIRECTORY "${PROJECT_SOURCE_DIR}"
+    WORKING_DIRECTORY "../.."
     RESULT_VARIABLE GIT_REVISION_STATUS
     OUTPUT_VARIABLE GIT_REVISION
     ERROR_QUIET OUTPUT_STRIP_TRAILING_WHITESPACE)
@@ -3275,7 +3275,7 @@ if(NOT WINDOWS_STORE AND NOT SDL2_DISABLE_SDL2MAIN)
   if (WIN32)
     target_link_libraries(SDL2main PRIVATE shell32)
   endif()
-  if(MINGW OR CYGWIN)
+  if(mingw OR CYGWIN)
     if(CMAKE_SIZEOF_VOID_P EQUAL 4)
       target_link_libraries(SDL2main PUBLIC "$<$<STREQUAL:$<TARGET_PROPERTY:TYPE>,EXECUTABLE>:-Wl,--undefined=_WinMain@16>")
     else()
@@ -3369,7 +3369,7 @@ if(SDL_SHARED)
   )
   # This picks up all the compiler options and such we've accumulated up to here.
   target_link_libraries(SDL2 PRIVATE $<BUILD_INTERFACE:sdl-build-options>)
-  if(MINGW OR CYGWIN)
+  if(mingw OR CYGWIN)
     if(NOT CMAKE_VERSION VERSION_LESS "3.13")
       target_link_options(SDL2 PRIVATE -static-libgcc)
     endif()
@@ -3471,7 +3471,7 @@ if(NOT SDL2_DISABLE_INSTALL)
   endif()
 
   ##### Export files #####
-  if (WINDOWS AND NOT MINGW)
+  if (WINDOWS AND NOT mingw)
     set(SDL_INSTALL_CMAKEDIR_DEFAULT "cmake")
     set(LICENSES_PREFIX "licenses/SDL2")
   else ()
@@ -3569,11 +3569,11 @@ if(NOT SDL2_DISABLE_INSTALL)
     install(FILES ${SDL2_BINARY_DIR}/sdl2.pc
             DESTINATION "${CMAKE_INSTALL_LIBDIR}/pkgconfig")
   endif()
-  if(NOT (WINDOWS OR CYGWIN) OR MINGW)
+  if(NOT (WINDOWS OR CYGWIN) OR mingw)
     if(SDL_SHARED)
       set(SOEXT ${CMAKE_SHARED_LIBRARY_SUFFIX}) # ".so", ".dylib", etc.
       get_target_property(SONAME SDL2 OUTPUT_NAME)
-      if(NOT ANDROID AND NOT MINGW AND NOT OS2)
+      if(NOT ANDROID AND NOT mingw AND NOT OS2)
           install(CODE "
             execute_process(COMMAND ${CMAKE_COMMAND} -E create_symlink
               \"lib${SONAME}${SOPOSTFIX}${SOEXT}\" \"libSDL2${SOPOSTFIX}${SOEXT}\"
@@ -3592,7 +3592,7 @@ endif()
 if(NOT SDL2_DISABLE_UNINSTALL)
   if(NOT TARGET uninstall)
     configure_file(
-        "${CMAKE_CURRENT_SOURCE_DIR}/cmake_uninstall.cmake.in"
+        "cmake_uninstall.cmake.in"
         "${CMAKE_CURRENT_BINARY_DIR}/cmake_uninstall.cmake"
         IMMEDIATE @ONLY)
 

@@ -1,4 +1,3 @@
-
 This version of TiMidity should contain all the fixes from the
 September 25 2003 SDL_mixer CVS snapshot. In addition, I've made some
 changes of my own, e.g.:
