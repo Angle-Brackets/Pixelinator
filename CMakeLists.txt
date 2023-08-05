@@ -39,7 +39,7 @@ add_library(Pixelinator STATIC
         ../../Pixelinator/src/engine/time.c
 
         # SDL
-        ../external/sdl2
+        ../external/SDL
         ../external/sdl-image
         ../external/sdl-mixer
         ../external/sdl-ttf
