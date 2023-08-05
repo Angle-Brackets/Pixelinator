@@ -1,16 +1,13 @@
 #Compiles the library
 cmake_minimum_required(VERSION 3.21)
-project(Pixelinator VERSION 1.0 DESCRIPTION "A 2D Engine using SDL and C")
-set(CMAKE_C_STANDARD 99)
+project(main VERSION 1.0 DESCRIPTION "A 2D Engine using SDL and C")
+set(CMAKE_C_STANDARD 11)
 
-find_package(SDL2 REQUIRED COMPONENTS SDL2)
-find_package(SDL2_mixer REQUIRED)
-find_package(SDL2_image REQUIRED)
-find_package(SDL2_ttf REQUIRED)
+add_subdirectory(../external bin)
 add_subdirectory(../../Pixelinator/glad ../../Pixelinator/src/engine/glad)
 include_directories(../../Pixelinator/include)
 
-add_library(Pixelinator STATIC
+add_library(main STATIC
         ../../Pixelinator/src/engine/audio/sound.c
         ../../Pixelinator/src/engine/config/config.c
         ../../Pixelinator/src/engine/core/core.c
@@ -29,15 +26,15 @@ add_library(Pixelinator STATIC
         ../../Pixelinator/src/engine/time.c
 )
 
-set_target_properties(Pixelinator PROPERTIES VERSION ${PROJECT_VERSION})
+set_target_properties(main PROPERTIES VERSION ${PROJECT_VERSION})
 #set_target_properties(Pixelinator PROPERTIES SOVERSION 1)
 
 #set_target_properties(Pixelinator PROPERTIES PUBLIC_HEADER pixelinator.h)
-target_include_directories(Pixelinator INTERFACE ../../Pixelinator)
-target_link_libraries(Pixelinator PRIVATE ../../Pixelinator/src/engine/glad SDL2::SDL2 SDL2_mixer::SDL2_mixer SDL2_image::SDL2_image SDL2_ttf::SDL2_ttf)
+target_include_directories(main INTERFACE ../../Pixelinator)
+target_link_libraries(main PRIVATE ../../Pixelinator/src/engine/glad SDL2::SDL2main SDL2::SDL2-static SDL2_image::SDL2_image-static SDL2_ttf::SDL2_ttf-static SDL2_mixer::SDL2_mixer-static)
 set("-OFast")
 
 include(GNUInstallDirs)
-install(TARGETS Pixelinator
+install(TARGETS main
         LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
         PUBLIC_HEADER DESTINATION ${CMAKE_INSTALL_INCLUDEDIR})
