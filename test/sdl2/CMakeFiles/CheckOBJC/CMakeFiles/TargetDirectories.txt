@@ -1,2 +1,0 @@
-/Users/ankitjoju/Desktop/Programs/Side Projects/Pixelinator/test/sdl2/CMakeFiles/CheckOBJC/CMakeFiles/edit_cache.dir
-/Users/ankitjoju/Desktop/Programs/Side Projects/Pixelinator/test/sdl2/CMakeFiles/CheckOBJC/CMakeFiles/rebuild_cache.dir

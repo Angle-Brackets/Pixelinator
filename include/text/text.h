@@ -3,7 +3,7 @@
 
 #include <SDL.h>
 #include <stdbool.h>
-#include "../../src/engine/font_cache/SDL_FontCache.h"
+#include "SDL_FontCache.h"
 #include "types.h"
 #include "util.h"
 
