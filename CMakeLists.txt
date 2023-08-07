@@ -12,13 +12,15 @@ endif()
 
 if(CMAKE_BUILD_TYPE EQUAL Release)
     message("Building Release...")
+    set(CMAKE_CXX_FLAGS_RELEASE "-OFast")
 endif()
 
 set(CMAKE_C_STANDARD 11)
 
-set(CMAKE_CXX_FLAGS "-Wall -Wextra")
-set(CMAKE_CXX_FLAGS_DEBUG "-g")
-set(CMAKE_CXX_FLAGS_RELEASE "-Ofast")
+if(CMAKE_BUILD_TYPE EQUAL DEBUG)
+    set(CMAKE_CXX_FLAGS "-Wall -Wextra")
+    set(CMAKE_CXX_FLAGS_DEBUG "-g")
+endif()
 
 add_library(Pixelinator STATIC
         ../../Pixelinator/src/engine/audio/sound.c
@@ -38,14 +40,14 @@ add_library(Pixelinator STATIC
         ../../Pixelinator/src/engine/global.c
         ../../Pixelinator/src/engine/time.c
 
-        # SDL
+        # SDL (Not sure if needed)
         ../external/SDL
         ../external/sdl-image
         ../external/sdl-mixer
         ../external/sdl-ttf
 )
 
-set(APP_EXE PixelinatorDemo)
+set(APP_EXE PixelinatorExe)
 
 if( ${CMAKE_SYSTEM_NAME} MATCHES "Android" )
     add_library( ${APP_EXE} SHARED )
@@ -65,7 +67,7 @@ endif()
 add_subdirectory("external")
 add_subdirectory(glad/)
 include_directories("include")
-#target_link_libraries(Pixelinator SDL2::SDL2main SDL2::SDL2-static SDL2_image::SDL2_image-static SDL2_ttf::SDL2_ttf-static SDL2_mixer::SDL2_mixer-static)
+
 
 # Library is generated inside of the cmake-build-debug or release folder!
 target_link_libraries(${APP_EXE} glad Pixelinator)

@@ -28,9 +28,15 @@ but technically does support other OpenGL primitives.
 - Thank you to [@rishitkhare](https://github.com/rishitkhare) for the logo, initial testing, and code contributions!
 
 ## Installation
-- There is a CMakeLists.txt file within the ``include`` directory, just run `cmake .` while inside that directory in your terminal and then
-run ``make`` to generate the `libPixelinator.a` file. This is the entire codebase as a library now!
-- Make sure that when you link the library, include all the headers in the include directory in your project along with the SDL dependencies!
+- There is a script called `submodules.sh` that will download the appropriate submodules 
+into any project that you use Pixelinator in. Make sure that you git checkout to a proper release
+version within each submodule so the pointed-to commits are consistent.
+- Additionally, include the `CMakeLists.txt` within the newly formed external folder to link the libraries
+to your project.
+- After running the engine once, it will generate a `libPixelinator.a` file that you can
+then statically link to your projects, make sure you include the header to access the functions
+from the library!
+- You can avoid the submodule nonsense if you install the libraries locally (not for you Windows users).
 
 ### Examples
 1. Bitmap graphics example
