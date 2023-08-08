@@ -1,4 +1,4 @@
-#include "pixel_threading.h"
+#include "graphics/pixel_threading.h"
 
 static pthread_t pixel_threads[THREADS]; //The amount of threads does not change during the course of the program
 static u32 bmp_scale_x = 1;

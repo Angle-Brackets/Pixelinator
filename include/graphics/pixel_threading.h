@@ -4,8 +4,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <pthread.h>
-#include <SDL.h>
-#include "../../../../include/types.h"
+#include "SDL2/SDL.h"
+#include "types.h"
 #include "util.h"
 
 #define THREADS 64

@@ -1,9 +1,7 @@
 #include <stdio.h>
 #include <stdbool.h>
 #include <SDL.h>
-#include "graphics/shapes.h"
-#include "global.h"
-#include "core/core.h"
+#include "pixelinator.h"
 
 #define WIDTH 750
 #define HEIGHT 750
