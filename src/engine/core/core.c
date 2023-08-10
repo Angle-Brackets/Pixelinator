@@ -4,7 +4,7 @@
 #include "input/input.h"
 #include "audio/sound.h"
 #include "graphics/bitmap.h"
-#include "../../../global.h"
+#include "global.h"
 
 static bool running = false;
 static void (*draw)() = NULL;

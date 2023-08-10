@@ -1,4 +1,4 @@
-#include "../../../global.h"
+#include "global.h"
 #include "../../../include/io/io.h"
 #include "../../../include/util.h"
 #include "../../../include/input/input.h"

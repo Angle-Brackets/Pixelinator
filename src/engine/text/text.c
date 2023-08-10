@@ -1,5 +1,5 @@
 #include "text/text.h"
-#include "../../../global.h"
+#include "global.h"
 static PIX_Font* default_font = NULL;
 
 PIX_Font* load_pix_font(const char* font_path, u32 font_size, SDL_Color color){

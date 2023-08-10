@@ -2,7 +2,7 @@
 
 #include "../../../include/audio/sound.h"
 #include "../../../include/util.h"
-#include "../../../global.h"
+#include "global.h"
 
 static Mix_Music* music[MAX_STORED_SOUNDS]; //Location of all stored music samples
 static Mix_Chunk* sfx[MAX_STORED_SOUNDS]; //Location of all stored sfx samples

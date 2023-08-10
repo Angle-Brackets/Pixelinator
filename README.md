@@ -34,8 +34,8 @@ version within each submodule so the pointed-to commits are consistent.
 - Additionally, include the `CMakeLists.txt` within the newly formed external folder to link the libraries
 to your project.
 - After running the engine once, it will generate a `libPixelinator.a` file that you can
-then statically link to your projects, make sure you include the header to access the functions
-from the library!
+then statically link to your projects, include the `pixelinator.h` header in your project to access
+all the library functions!
 - You can avoid the submodule nonsense if you install the libraries locally (not for you Windows users).
 
 ### Examples

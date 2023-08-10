@@ -1,7 +1,7 @@
 #include <SDL.h>
 
 #include "../../../include/util.h"
-#include "../../../global.h"
+#include "global.h"
 #include "../../../include/render/render.h"
 #include "render_internal.h"
 

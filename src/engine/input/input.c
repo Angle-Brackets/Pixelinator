@@ -1,5 +1,5 @@
 #include "../../../include/types.h"
-#include "../../../global.h"
+#include "global.h"
 #include "../../../include/util.h"
 #include "../../../include/input/input.h"
 
