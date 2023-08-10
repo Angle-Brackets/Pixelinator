@@ -1,6 +1,6 @@
 #include <SDL_image.h>
 #include "util.h"
-#include "global.h"
+#include "../../../../global.h"
 #include "graphics/sprite.h"
 
 static SDL_RWops* io = NULL;

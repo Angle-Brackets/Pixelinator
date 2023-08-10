@@ -44,8 +44,7 @@ add_library(Pixelinator STATIC
         ../external/SDL
         ../external/sdl-image
         ../external/sdl-mixer
-        ../external/sdl-ttf
-        include/pixelinator.h)
+        ../external/sdl-ttf)
 
 set(APP_EXE PixelinatorExe)
 

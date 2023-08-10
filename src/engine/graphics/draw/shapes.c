@@ -1,5 +1,5 @@
 #include "../../../../include/graphics/shapes.h"
-#include "../../../../include/global.h"
+#include "../../../../global.h"
 
 static void intensify_pixel(i32 x, i32 y, f32 r, SDL_Color* color){
     f32 alpha = (1 - (r * r))*255;
