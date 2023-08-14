@@ -2,6 +2,11 @@
 #include "controller/controller.h"
 
 void init_controllers(u8 max_controllers){
+    if(max_controllers == 0){
+        WARN("Max controllers set to 0, controllers will not be supported in this program! Do not use any controller functions or undocumented behavior will occur!\n")
+        return;
+    }
+
     global.controller.connected_controllers = 0;
     global.controller.max_controllers = max_controllers;
     global.controller.controllers = (controller_t*)calloc(global.controller.max_controllers, sizeof(controller_t));
@@ -9,7 +14,8 @@ void init_controllers(u8 max_controllers){
     //Only supports up to 256 controllers.
     for(u8 i = 0; i < (u8)SDL_NumJoysticks(); i++){
         if(SDL_IsGameController(i)){
-            global.controller.controllers[global.controller.connected_controllers++].controller = SDL_GameControllerOpen(i);
+            global.controller.controllers[global.controller.connected_controllers].controller = SDL_GameControllerOpen(i);
+            global.controller.connected_controllers++;
         }
     }
 
@@ -81,11 +87,16 @@ button_state get_button_state(controller_t* controller, SDL_GameControllerButton
     return state;
 }
 
-int get_joystick_state(controller_t* controller){
+int get_joystick_state(controller_t* controller, u16 axis, u16 deadzone){
     SDL_Joystick* joystick = SDL_GameControllerGetJoystick(controller->controller);
-    return SDL_JoystickGetAxis(joystick, 0);
-}
+    i16 dir = SDL_JoystickGetAxis(joystick, axis);
 
+    if(dir < -deadzone || dir > deadzone){
+        return dir;
+    }
+
+    return 0;
+}
 
 void close_controllers(){
     for(u8 i = 0; i < global.controller.max_controllers; i++){

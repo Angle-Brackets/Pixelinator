@@ -82,11 +82,11 @@ button_state get_button_state(controller_t* controller, SDL_GameControllerButton
 /**
  * Detect the action of a joystick on a particular controller
  * @param controller controller to check button action on (NULLs are ignored safely)
- * @param event Joystick event to listen for
- * @param joystick Joystick to listen for
- * @return a boolean indicating whether the joystick followed the desired event.
+ * @param axis Joystick axis to read (Typically the even numbered axis is X and the odd numbered axis is Y)
+ * @param deadzone Joystick deadzone (Ignores inputs below this threshold)
+ * @return A value that ranges from -32768 to 32767 representing the magnitude of the stick's direction for that axis.
  */
-int get_joystick_state(controller_t* controller);
+int get_joystick_state(controller_t* controller, u16 axis, u16 deadzone);
 
 /**
  * Frees up memory associated with controllers
