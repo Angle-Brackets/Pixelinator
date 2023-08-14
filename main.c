@@ -120,11 +120,11 @@ void draw() {
         printf("Released A\n");
     }
 
-
     bitmap_scale(s, s);
     bitmap_shift(x, 0);
     draw_bitmap();
 
+    render_text(NULL, 0, 0, LEFT, "%i", get_joystick_state(&global.controller.controllers[0]));
     static char buffer[20];
     snprintf(buffer, 20, "Engine - %u", global.time.frame_rate);
     SDL_SetWindowTitle(global.render.window, buffer);
@@ -133,6 +133,7 @@ void draw() {
 i32 main(){
     initialize(WIDTH, HEIGHT, WIDTH, HEIGHT, 120, 15, 1, MULTITHREADING_ENABLED | BITMAP_ACTIVE | IGNORE_FOCUS, 0, draw);
     circles = (struct Circle*)malloc(sizeof(struct Circle) * circle_capacity);
+    set_default_font(load_pix_font("../assets/pixel-emulator-font/PixelEmulator-xq08.ttf", 12, (SDL_Color){255,0,0,255}));
 
     for (i32 i = 0; i < circle_num; i++) {
         circles[i].r = arc4random() % 100;

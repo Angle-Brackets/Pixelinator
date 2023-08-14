@@ -86,7 +86,7 @@ button_state get_button_state(controller_t* controller, SDL_GameControllerButton
  * @param joystick Joystick to listen for
  * @return a boolean indicating whether the joystick followed the desired event.
  */
-bool read_controller_joystick(controller_t* controller, SDL_JoyAxisEvent event);
+int get_joystick_state(controller_t* controller);
 
 /**
  * Frees up memory associated with controllers

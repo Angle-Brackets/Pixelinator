@@ -81,6 +81,12 @@ button_state get_button_state(controller_t* controller, SDL_GameControllerButton
     return state;
 }
 
+int get_joystick_state(controller_t* controller){
+    SDL_Joystick* joystick = SDL_GameControllerGetJoystick(controller->controller);
+    return SDL_JoystickGetAxis(joystick, 0);
+}
+
+
 void close_controllers(){
     for(u8 i = 0; i < global.controller.max_controllers; i++){
         SDL_GameControllerClose(global.controller.controllers[i].controller);
