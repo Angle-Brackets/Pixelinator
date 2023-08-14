@@ -108,6 +108,19 @@ void draw() {
         set_stroke_fill(&A);
     }
 
+    //printf("%i\n", SDL_CONTROLLER_BUTTON_MAX - SDL_CONTROLLER_BUTTON_INVALID + 1);
+    u32 z = read_controller_button(&global.controller.controllers[0], SDL_CONTROLLER_BUTTON_A);
+    if(z & CON_PRESSED) {
+        printf("Pressed A\n");
+    }
+    else if(z & CON_HELD){
+        printf("Held A\n");
+    }
+    else if(z & CON_RELEASED){
+        printf("Released A\n");
+    }
+
+
     bitmap_scale(s, s);
     bitmap_shift(x, 0);
     draw_bitmap();
@@ -118,7 +131,7 @@ void draw() {
 }
 
 i32 main(){
-    initialize(WIDTH, HEIGHT, WIDTH, HEIGHT, 120, 15, MULTITHREADING_ENABLED | BITMAP_ACTIVE | IGNORE_FOCUS, 0, draw);
+    initialize(WIDTH, HEIGHT, WIDTH, HEIGHT, 120, 15, 1, MULTITHREADING_ENABLED | BITMAP_ACTIVE | IGNORE_FOCUS, 0, draw);
     circles = (struct Circle*)malloc(sizeof(struct Circle) * circle_capacity);
 
     for (i32 i = 0; i < circle_num; i++) {
