@@ -42,7 +42,7 @@ static void poll_events(){
             case SDL_CONTROLLERDEVICEADDED:
             case SDL_CONTROLLERDEVICEREMOVED:
                 //For some reason on MACOS it requires it to be connected through wireless?
-                update_controllers(event.cdevice.which, event.type);
+                update_controller_list(event.cdevice.which, event.type);
                 break;
             default:
                 break;
@@ -61,6 +61,7 @@ static void loop(){
   if(global.engine & FOCUSED || global.render_flags & IGNORE_FOCUS){
       render_begin();
       input_update();
+      controller_update();
       draw();
       render_end();
   }

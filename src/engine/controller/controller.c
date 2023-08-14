@@ -19,17 +19,19 @@ void init_controllers(u8 max_controllers){
     }
 }
 
-void update_controllers(i32 joystick_id, u32 event_type){
+void update_controller_list(i32 joystick_id, u32 event_type){
     if(event_type == SDL_CONTROLLERDEVICEADDED){
         for(u8 i = 0; i < global.controller.max_controllers; i++){
             if(global.controller.controllers[i].controller == NULL){
                 //Found the first open spot, add new controller.
                 global.controller.controllers[i].controller = SDL_GameControllerOpen(joystick_id);
                 global.controller.connected_controllers += global.controller.controllers[i].controller != NULL; //Did it actually add a new controller?
-                return;
+                break;
             }
         }
-        WARN("Maximum number of controllers added, cannot add anymore!\n")
+        if(global.controller.connected_controllers == MAX_SUPPORTED_CONTROLLERS) {
+            WARN("Maximum number of controllers added, cannot add anymore!\n")
+        }
     }
     else if(event_type == SDL_CONTROLLERDEVICEREMOVED) {
         for (u8 i = 0; i < global.controller.max_controllers; i++) {
@@ -37,47 +39,34 @@ void update_controllers(i32 joystick_id, u32 event_type){
                 SDL_GameControllerClose(global.controller.controllers[i].controller);
                 global.controller.controllers[i].controller = NULL;
                 global.controller.connected_controllers--;
-                return;
+                break;
             }
         }
     }
 }
 
-button_state read_controller_button(controller_t* controller, SDL_GameControllerButton button){
-    const static u32 total_buttons = SDL_CONTROLLER_BUTTON_MAX - SDL_CONTROLLER_BUTTON_INVALID + 1;
-    button_state state = INVALID;
-    if(!controller){
-        return state;
-    }
-    //Prepare status flag (bit shift button status [0/1] by controller ID to turn on the correct bit in the union)
-    u32 new_status = SDL_GameControllerGetButton(controller->controller, button);
-    u32 current_status = (controller->state >> (button + 1)) & 0x1;
+void controller_update(){
+    for(u8 i = 0; i < global.controller.connected_controllers; i++) {
+        controller_t* controller = &global.controller.controllers[i];
+        if (!controller) {
+            return;
+        }
 
-    //Determine the return flag for the function, 4 cases.
-    if(current_status == 0){
-        if(new_status == 0){
-            //Means the button is still not pressed
-            state = CON_UNPRESSED;
-        }
-        else if(new_status == 1){
-            //Means button was JUST pressed
-            state = CON_PRESSED;
-        }
-    }
-    else{
-        if(new_status == 0){
-            //Means button was JUST released
-            state = CON_RELEASED;
-        }
-        else if(new_status == 1){
-            //Means button is held
-            state = CON_HELD;
+        //Loops over all buttons and updates the state for each of them accordingly. (Start at BUTTON A to skip INVALID)
+        for (u32 button = SDL_CONTROLLER_BUTTON_A; button < SDL_CONTROLLER_BUTTON_MAX; button++) {
+            //Prepare status flag (bit shift button status [0/1] by controller ID to turn on the correct bit in the union)
+            u32 new_status = SDL_GameControllerGetButton(controller->controller, button);
+
+            //Set the bit accordingly.
+            //The button + 1 is because the invalid bit isn't directly set by this method (or at all).
+            controller->state = (controller->state & ~(1UL << (button + 1))) | (new_status << (button + 1));
         }
     }
-    //Set the bit accordingly.
-    //The button + 1 is because the invalid bit isn't directly set by this method (or at all).
-    controller->state = (controller->state & ~(1UL << (button + 1))) | (new_status << (button + 1));
-    return state;
+}
+
+button_state get_button_state(controller_t* controller, SDL_GameControllerButton button){
+    u32 current_status = (controller->state >> (button + 1)) & 0x1;
+    return 0;
 }
 
 void close_controllers(){

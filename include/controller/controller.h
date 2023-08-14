@@ -1,7 +1,7 @@
 #ifndef PIXELINATOR_CONTROLLER_H
 #define PIXELINATOR_CONTROLLER_H
 
-#define MAX_SUPPORTED_CONTROLLERS 256
+#define MAX_SUPPORTED_CONTROLLERS 255
 #define TEST_JOY_ID(CONTROLLER, ID) SDL_JoystickInstanceID(SDL_GameControllerGetJoystick(CONTROLLER)) == ID
 
 #include <SDL.h>
@@ -67,7 +67,10 @@ void init_controllers(u8 max_controllers);
 /**
  * Updates the list of controllers
  */
-void update_controllers(i32 joystick_id, u32 event_type);
+void update_controller_list(i32 joystick_id, u32 event_type);
+
+//Updates the states of all the controllers every frame
+void controller_update();
 
 /**
  * Detect the action of a button on a particular controller. \n
@@ -77,7 +80,7 @@ void update_controllers(i32 joystick_id, u32 event_type);
  * @param button Button to listen for
  * @return a boolean indicating whether the button followed the desired event.
  */
-button_state read_controller_button(controller_t* controller, SDL_GameControllerButton button);
+button_state get_button_state(controller_t* controller, SDL_GameControllerButton button);
 
 /**
  * Detect the action of a joystick on a particular controller
