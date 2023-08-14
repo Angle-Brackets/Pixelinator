@@ -45,28 +45,40 @@ void update_controller_list(i32 joystick_id, u32 event_type){
     }
 }
 
-void controller_update(){
-    for(u8 i = 0; i < global.controller.connected_controllers; i++) {
-        controller_t* controller = &global.controller.controllers[i];
-        if (!controller) {
-            return;
+button_state get_button_state(controller_t* controller, SDL_GameControllerButton button){
+    button_state state = INVALID;
+    if(!controller){
+        return state;
+    }
+    //Prepare status flag (bit shift button status [0/1] by controller ID to turn on the correct bit in the union)
+    u32 new_status = SDL_GameControllerGetButton(controller->controller, button);
+    u32 current_status = (controller->state >> (button + 1)) & 0x1;
+
+    //Determine the return flag for the function, 4 cases.
+    if(current_status == 0){
+        if(new_status == 0){
+            //Means the button is still not pressed
+            state = CON_UNPRESSED;
         }
-
-        //Loops over all buttons and updates the state for each of them accordingly. (Start at BUTTON A to skip INVALID)
-        for (u32 button = SDL_CONTROLLER_BUTTON_A; button < SDL_CONTROLLER_BUTTON_MAX; button++) {
-            //Prepare status flag (bit shift button status [0/1] by controller ID to turn on the correct bit in the union)
-            u32 new_status = SDL_GameControllerGetButton(controller->controller, button);
-
-            //Set the bit accordingly.
-            //The button + 1 is because the invalid bit isn't directly set by this method (or at all).
-            controller->state = (controller->state & ~(1UL << (button + 1))) | (new_status << (button + 1));
+        else if(new_status == 1){
+            //Means button was JUST pressed
+            state = CON_PRESSED;
         }
     }
-}
-
-button_state get_button_state(controller_t* controller, SDL_GameControllerButton button){
-    u32 current_status = (controller->state >> (button + 1)) & 0x1;
-    return 0;
+    else{
+        if(new_status == 0){
+            //Means button was JUST released
+            state = CON_RELEASED;
+        }
+        else if(new_status == 1){
+            //Means button is held
+            state = CON_HELD;
+        }
+    }
+    //Set the bit accordingly.
+    //The button + 1 is because the invalid bit isn't directly set by this method (or at all).
+    controller->state = (controller->state & ~(1UL << (button + 1))) | (new_status << (button + 1));
+    return state;
 }
 
 void close_controllers(){

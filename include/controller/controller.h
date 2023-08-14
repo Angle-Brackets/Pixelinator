@@ -69,9 +69,6 @@ void init_controllers(u8 max_controllers);
  */
 void update_controller_list(i32 joystick_id, u32 event_type);
 
-//Updates the states of all the controllers every frame
-void controller_update();
-
 /**
  * Detect the action of a button on a particular controller. \n
  * This does not differentiate between a button being PRESSED VS HELD, you must implement your own debounce.

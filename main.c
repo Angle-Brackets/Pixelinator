@@ -109,8 +109,8 @@ void draw() {
     }
 
     //printf("%i\n", SDL_CONTROLLER_BUTTON_MAX - SDL_CONTROLLER_BUTTON_INVALID + 1);
-    u32 z = read_controller_button(&global.controller.controllers[0], SDL_CONTROLLER_BUTTON_A);
-    if(global.controller.controllers[0].a) {
+    u32 z = get_button_state(&global.controller.controllers[0], SDL_CONTROLLER_BUTTON_A);
+    if(z & CON_PRESSED) {
         printf("Pressed A\n");
     }
     else if(z & CON_HELD){

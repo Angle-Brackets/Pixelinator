@@ -61,7 +61,6 @@ static void loop(){
   if(global.engine & FOCUSED || global.render_flags & IGNORE_FOCUS){
       render_begin();
       input_update();
-      controller_update();
       draw();
       render_end();
   }
