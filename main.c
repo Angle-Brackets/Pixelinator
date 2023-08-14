@@ -22,6 +22,7 @@ struct Circle circle;
 SDL_Color A = {0, 0, 0, 255};
 SDL_Color WHITE = {255, 255, 255, 0};
 SDL_Color C = {255, 0, 0, 0};
+static u32 speed = 350;
 
 void draw() {
     static bool paused = false;
@@ -45,11 +46,18 @@ void draw() {
     if(get_button_state(&global.controller.controllers[0], SDL_CONTROLLER_BUTTON_Y) & CON_HELD){
         circle.color = (SDL_Color){0};
     }
+    if(get_button_state(&global.controller.controllers[0], SDL_CONTROLLER_BUTTON_DPAD_UP) & CON_HELD){
+        speed += 1;
+    }
+    if(get_button_state(&global.controller.controllers[0], SDL_CONTROLLER_BUTTON_DPAD_DOWN) & CON_HELD){
+        speed -= 1;
+    }
+
 
     f32 xMag = get_joystick_state(&global.controller.controllers[0], 0, 3200);
     f32 yMag = get_joystick_state(&global.controller.controllers[0], 1, 3200);
-    circle.x += (xMag / 32767.0F) * 5;
-    circle.y += (yMag / 32767.0F) * 5;
+    circle.x += (xMag / 32767.0F) * global.time.delta * speed;
+    circle.y += (yMag / 32767.0F) * global.time.delta * speed;
 
     set_stroke_fill(&circle.color);
     set_shape_fill(&circle.color);
@@ -57,8 +65,8 @@ void draw() {
 
     draw_bitmap();
 
-    render_text(NULL, 0, 0, LEFT, "X: %f\nY: %f", circle.x, circle.y)
-    render_text(NULL, 0, 30, LEFT, "RGB: (%u, %u, %u)", circle.color.r, circle.color.g, circle.color.b)
+    render_text(NULL, 0, 0, LEFT, "X: %f\nY: %f\nSpeed: %u", circle.x, circle.y, speed)
+    render_text(NULL, 0, 45, LEFT, "RGB: (%u, %u, %u)", circle.color.r, circle.color.g, circle.color.b)
     static char buffer[20];
     snprintf(buffer, 20, "Engine - %u", global.time.frame_rate);
     SDL_SetWindowTitle(global.render.window, buffer);
