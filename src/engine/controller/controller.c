@@ -52,7 +52,7 @@ void update_controller_list(i32 joystick_id, u32 event_type){
 }
 
 button_state get_button_state(controller_t* controller, SDL_GameControllerButton button){
-    button_state state = INVALID;
+    button_state state = CON_INVALID;
     if(!controller){
         return state;
     }

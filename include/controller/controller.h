@@ -9,7 +9,7 @@
 #include "util.h"
 
 typedef enum Button_State {
-    INVALID = 0x1 << 0, //Invalid Controller / Button State
+    CON_INVALID = 0x1 << 0, //Invalid Controller / Button State
     CON_UNPRESSED = 0x1 << 1, //Button was never pressed
     CON_RELEASED = 0x1 << 2, //Button was just unpressed
     CON_PRESSED = 0x1 << 3, //Button was just pressed

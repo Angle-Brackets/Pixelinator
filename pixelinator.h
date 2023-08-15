@@ -2,8 +2,9 @@
 #define PIXELINATOR_PIXELINATOR_H
 
 /**
- * UPDATED FOR VERSION 1.2
+ * UPDATED FOR VERSION 1.2.1
  *
+ * Changelog V1.2.1: Hotfix for initialize function in core.h!
  * Changelog V1.2: Added controller support. Supports most modern controllers and joysticks.
  *
  * Include this into your project to immediately start using Pixelinator after all dependencies are installed!
@@ -178,7 +179,7 @@ int config_key_bind(Input_Key key, const char* key_name);
 
 //Controller
 typedef enum Button_State {
-    INVALID = 0x1 << 0, //Invalid Controller / Button State
+    CON_INVALID = 0x1 << 0, //Invalid Controller / Button State
     CON_UNPRESSED = 0x1 << 1, //Button was never pressed
     CON_RELEASED = 0x1 << 2, //Button was just unpressed
     CON_PRESSED = 0x1 << 3, //Button was just pressed
@@ -314,6 +315,7 @@ typedef enum engine_state {
  * @param bitmap_height Height in pixels of the bitmap - unused if the BITMAP_ENABLED Render Flag is omitted.
  * @param max_fps Max fps cap for the engine to attempt to reach, may be limited by VSYNC of monitor if not disabled with the DISABLE_VSYNC Render Flag.
  * @param volume Starting volume for both music and sfx.
+ * @param controllers Number of max controllers allowed in your program.
  * @param render_flags Flags to modify attributes of the rendering pipeline. It is recommended that MULTITHREADING_ENABLED is passed at minimum for a performance gain.
  *                     If you want access to bitmap graphics, pass the BITMAP_ENABLED flag, otherwise they will not work.
  * @param sound_flags Flags to modify attributes of the sound pipeline. By default MP3 (Music) and WAV (SFX) are automatically supported. If that is all that's needed, then pass 0.
@@ -321,7 +323,7 @@ typedef enum engine_state {
  *
  * @return 0 for success, 1 if an error occurred.
  */
-i32 initialize(u32 window_width, u32 window_height, u32 bitmap_width, u32 bitmap_height, u32 max_fps, u32 volume, Render_Flags render_flags, MIX_InitFlags sound_flags, void (*draw_func)());
+i32 initialize(u32 window_width, u32 window_height, u32 bitmap_width, u32 bitmap_height, u32 max_fps, u32 volume, u8 controllers, Render_Flags render_flags, MIX_InitFlags sound_flags, void (*draw_func)());
 
 /**
  * Starts the program, must call initialize() before this function.
