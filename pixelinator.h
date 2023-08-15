@@ -2,8 +2,9 @@
 #define PIXELINATOR_PIXELINATOR_H
 
 /**
- * UPDATED FOR VERSION 1.2.1
+ * UPDATED FOR VERSION 1.2.2
  *
+ * Changelog V1.2.2: Hotfix for global.h not being updated.
  * Changelog V1.2.1: Hotfix for initialize function in core.h!
  * Changelog V1.2: Added controller support. Supports most modern controllers and joysticks.
  *
@@ -965,6 +966,7 @@ typedef struct global {
     Bitmap_State bitmap;
     Time_State time;
     Sound_State sound;
+    Controller_State controller;
 
     //Flags
     Render_Flags render_flags;
