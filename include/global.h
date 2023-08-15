@@ -6,6 +6,7 @@
 #include "config/config.h"
 #include "graphics/bitmap.h"
 #include "audio/sound.h"
+#include "controller/controller.h"
 #include "time.h"
 
 typedef struct global {
@@ -16,6 +17,7 @@ typedef struct global {
     Bitmap_State bitmap;
     Time_State time;
     Sound_State sound;
+    Controller_State controller;
 
     //Flags
     Render_Flags render_flags;

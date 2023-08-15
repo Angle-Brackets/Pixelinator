@@ -1,16 +1,24 @@
-#include "../include/render/render.h"
+#include "render/render.h"
 #include "global.h"
 #include "render_internal.h"
+#include "util.h"
 
 static Render_State_Internal state = {0};
 
 void render_init(u32 width, u32 height, Render_Flags flags) {
-    SDL_Init(SDL_INIT_VIDEO | SDL_INIT_AUDIO);
+    //Makes the interpolation the nicest it can be and some other hints.
+    SDL_SetHint(SDL_HINT_AUTO_UPDATE_JOYSTICKS, "1");
+    SDL_SetHint(SDL_HINT_JOYSTICK_THREAD, "1");
+    SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, "2");
+
+    if(SDL_Init(SDL_INIT_EVERYTHING) < 0){
+        ERROR_EXIT("Could not initialize SDL!\nError: %s", SDL_GetError())
+    }
+
     global.render.width = width;
     global.render.height = height;
     initialize_SDL("Engine", global.render.width, global.render.height, flags);
-    //Makes the interpolation the nicest it can be.
-    SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, "2");
+
 
     //Set flags
     global.render_flags = flags;

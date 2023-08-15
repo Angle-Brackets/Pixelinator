@@ -38,6 +38,12 @@ static void poll_events(){
                             pause_audio();
                         break;
                 }
+                break;
+            case SDL_CONTROLLERDEVICEADDED:
+            case SDL_CONTROLLERDEVICEREMOVED:
+                //For some reason on MACOS it requires it to be connected through wireless?
+                update_controller_list(event.cdevice.which, event.type);
+                break;
             default:
                 break;
         }
@@ -63,7 +69,7 @@ static void loop(){
 }
 
 i32 initialize(u32 window_width, u32 window_height, u32 bitmap_width, u32 bitmap_height, u32 max_fps, u32 volume,
-               Render_Flags render_flags, MIX_InitFlags sound_flags, void (*draw_func)()) {
+               u8 controllers, Render_Flags render_flags, MIX_InitFlags sound_flags, void (*draw_func)()) {
     //Verify bounds
     VERIFY_LOW_BOUND(window_width, 0, "width")
     VERIFY_LOW_BOUND(window_height, 0, "height")
@@ -81,6 +87,10 @@ i32 initialize(u32 window_width, u32 window_height, u32 bitmap_width, u32 bitmap
     if(init_mixer(sound_flags, volume) != 0){
         return 1;
     }
+
+    //Initialize Controllers
+    init_controllers(controllers);
+
     //Initialize Renderer + Some warnings
     render_init(window_width, window_height, render_flags);
     if(!(render_flags & MULTITHREADING_ENABLED)){
@@ -126,6 +136,8 @@ void start(){
     SDL_DestroyRenderer(global.render.renderer);
     SDL_DestroyWindow(global.render.window);
     quit_mixer();
+    close_controllers();
     SDL_Quit();
 }
 
+//emcc main.c -s WASM=1 -s USE_SDL=2 -s USE_SDL_IMAGE=2 -s SDL2_IMAGE_FORMATS='["png"]' -s USE_SDL_TTF=2 --preload_file assets -o index.js

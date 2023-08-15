@@ -11,13 +11,14 @@ if(NOT CMAKE_BUILD_TYPE)
 endif()
 
 if(CMAKE_BUILD_TYPE EQUAL Release)
-    message("Building Release...")
+    message(WARNING "Building Release...")
     set(CMAKE_CXX_FLAGS_RELEASE "-OFast")
 endif()
 
 set(CMAKE_C_STANDARD 11)
 
 if(CMAKE_BUILD_TYPE EQUAL DEBUG)
+    message(WARNING "Building Debug...")
     set(CMAKE_CXX_FLAGS "-Wall -Wextra")
     set(CMAKE_CXX_FLAGS_DEBUG "-g")
 endif()
@@ -39,6 +40,7 @@ add_library(Pixelinator STATIC
         ../../Pixelinator/src/engine/text/text.c
         ../../Pixelinator/src/engine/global.c
         ../../Pixelinator/src/engine/time.c
+        ../../Pixelinator/src/engine/controller/controller.c
 
         # SDL (Not sure if needed)
         ../external/SDL
@@ -47,6 +49,7 @@ add_library(Pixelinator STATIC
         ../external/sdl-ttf)
 
 set(APP_EXE PixelinatorExe)
+
 
 if( ${CMAKE_SYSTEM_NAME} MATCHES "Android" )
     add_library( ${APP_EXE} SHARED )
