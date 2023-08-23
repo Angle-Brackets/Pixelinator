@@ -126,6 +126,15 @@ void initialize_bitmap(u32 width, u32 height);
  */
 void draw_bitmap();
 
+/**
+ * Resize the bitmap. This clears the bitmap, so be careful!\n
+ * This function is <b>expensive</b>! Do not call it often. \n
+ * (It is recommended you update the size of the bitmap THEN update the size of the window to avoid blanking out the screen!)
+ * @param width New width of bitmap
+ * @param height New height of bitmap
+ */
+void resize_bitmap(u32 width, u32 height);
+
 //Global texture used for drawing bitmap graphics
 extern SDL_Texture* bitmap;
 extern bool bitmap_initialized;

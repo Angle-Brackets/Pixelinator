@@ -2,8 +2,9 @@
 #define PIXELINATOR_PIXELINATOR_H
 
 /**
- * UPDATED FOR VERSION 1.2.2
+ * UPDATED FOR VERSION 1.2.3
  *
+ * Changelog V.1.2.3: Added functions to resize the window and bitmap at runtime.
  * Changelog V1.2.2: Hotfix for global.h not being updated.
  * Changelog V1.2.1: Hotfix for initialize function in core.h!
  * Changelog V1.2: Added controller support. Supports most modern controllers and joysticks.
@@ -300,6 +301,13 @@ void render_begin(void);
  */
 void render_end(void);
 
+/**
+ * Change the window size forcefully. Both must be greater than zero, otherwise it will give a warning.
+ * @param width New width of window
+ * @param height New height of window.
+ */
+void set_window_size(i32 width, i32 height);
+
 //Core
 #define VERIFY_LOW_BOUND(x, min, name) {if(x < min){fprintf(stderr, "Illegal value for %s passed.\n", name); return 1;}} //Validates if an entered value is not lower than a given value. Can't check a max because multiple monitors might screw with it too much.
 
@@ -517,6 +525,15 @@ void initialize_bitmap(u32 width, u32 height);
  * Draw the bitmap to the screen, the order in which you call this DOES matter. (For example, render the bitmap, then place text so you can see it!)
  */
 void draw_bitmap();
+
+/**
+ * Resize the bitmap. This clears the bitmap, so be careful!\n
+ * This function is <b>expensive</b>! Do not call it often. \n
+ * (It is recommended you update the size of the bitmap THEN update the size of the window to avoid blanking out the screen!)
+ * @param width New width of bitmap
+ * @param height New height of bitmap
+ */
+void resize_bitmap(u32 width, u32 height);
 
 //Global texture used for drawing bitmap graphics
 extern SDL_Texture* bitmap;

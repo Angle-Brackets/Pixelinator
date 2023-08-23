@@ -21,7 +21,7 @@ struct Circle circle;
 
 SDL_Color A = {0, 0, 0, 255};
 SDL_Color WHITE = {255, 255, 255, 0};
-SDL_Color C = {255, 0, 0, 0};
+SDL_Color BROWN = {168, 130, 96, 0};
 static u32 speed = 350;
 
 void draw() {
@@ -31,8 +31,24 @@ void draw() {
         exit_program();
     }
 
+    if(get_key_state_str("R") & KS_PRESSED){
+        set_window_size(WIDTH, HEIGHT);
+        resize_bitmap(WIDTH, HEIGHT);
+    }
+
+    if(get_key_state_str("I") & KS_HELD){
+        resize_bitmap(global.render.width + 10, global.render.height + 10);
+        set_window_size(global.render.width + 10, global.render.height + 10);
+    }
+
+    if(get_key_state_str("D") & KS_HELD){
+        resize_bitmap(global.render.width - 10, global.render.height - 10);
+        set_window_size(global.render.width - 10, global.render.height - 10);
+
+    }
+
     //Draw Elements
-    fill_background(&WHITE);
+    fill_background(&BROWN);
 
     if(get_button_state(&global.controller.controllers[0], SDL_CONTROLLER_BUTTON_A) & CON_HELD){
         circle.color.r += 1;

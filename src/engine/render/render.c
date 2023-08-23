@@ -36,3 +36,14 @@ void render_end(void){
         global.bitmap.bitmap_calls = 0;
     }
 }
+
+void set_window_size(i32 width, i32 height){
+    if(width <= 0 || height <= 0){
+        WARN("Invalid height or width provided\n")
+        return;
+    }
+
+    SDL_SetWindowSize(global.render.window, width, height);
+    global.render.width = width;
+    global.render.height = height;
+}

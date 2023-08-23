@@ -26,6 +26,7 @@ static void poll_events(){
                     case SDL_WINDOWEVENT_SIZE_CHANGED:
                         global.render.width = event.window.data1;
                         global.render.height = event.window.data2;
+                        set_window_size(global.render.width, global.render.height);
                         break;
                     case SDL_WINDOWEVENT_FOCUS_GAINED:
                         global.engine = FOCUSED;

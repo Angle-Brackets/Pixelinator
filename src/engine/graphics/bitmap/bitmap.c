@@ -274,3 +274,44 @@ void draw_bitmap(){
     }
 }
 
+void resize_bitmap(u32 width, u32 height){
+    if(!bitmap_initialized){
+        WARN("Bitmap not initialized! Enable the bitmap with the Render Flag BITMAP_ENABLED!\n")
+        return;
+    }
+    //Most things don't need to be updated, just anything that involved the old height needs to change.
+    bitmap_scale_x = floor(global.render.width / width);
+    bitmap_scale_y = floor(global.render.height / height);
+
+    /**
+     * Need to reallocate the pixel buffer array to the new size. This requires freeing the entire array since
+     * if the array is shrunken, then it will cause a memory leak.
+     */
+
+    for(i32 i = 0; i < global.bitmap.height; i++){
+        CLEAR_FREE(pixel_buffer[i])
+    }
+    CLEAR_FREE(pixel_buffer)
+    global.bitmap.width = width;
+    global.bitmap.height = height;
+
+    //Now we reallocate!
+    if ((pixel_buffer = (SDL_Color**)calloc(global.bitmap.height, sizeof(SDL_Color*))) == NULL) {
+        ERROR_EXIT("Failed to initialize pixel buffer rows.\n")
+    }
+
+    for (int i = 0; i < global.bitmap.height; i++) {
+        pixel_buffer[i] = (SDL_Color*)calloc(global.bitmap.width, sizeof(SDL_Color));
+
+        if (pixel_buffer[i] == NULL) {
+            ERROR_EXIT("Failed to initialize pixel buffer columns.\n")
+        }
+    }
+
+    if(bitmap != NULL) {
+        SDL_DestroyTexture(bitmap);
+    }
+
+    bitmap = SDL_CreateTexture(global.render.renderer, SDL_PIXELFORMAT_RGBA32, SDL_TEXTUREACCESS_STREAMING, global.bitmap.width * bitmap_scale_x, global.bitmap.height * bitmap_scale_y);
+}
+

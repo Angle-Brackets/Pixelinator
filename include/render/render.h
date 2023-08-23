@@ -37,4 +37,12 @@ void render_begin(void);
  */
 void render_end(void);
 
+/**
+ * Change the window size forcefully. Both must be greater than zero, otherwise it will give a warning.
+ * @param width New width of window
+ * @param height New height of window.
+ *
+ */
+void set_window_size(i32 width, i32 height);
+
 #endif //SDLCENGINE_RENDER_H
