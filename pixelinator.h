@@ -374,12 +374,21 @@ sprite_t* create_sprite(i32 x, i32 y, u32 width, u32 height, sprite_sheet* sheet
 
 /**
  * Creates a sprite sheet that can be used for multiple sprites to reference
- * @param file_path file path to sprite sheet (currently only PNGs are supported)
- * @param ignored_colors colors to ignore when reading from the sprite sheet
+ * @param file_path file path to sprite sheet
+ * @param ignored_colors colors to ignore when reading from the sprite sheet (not sensitive to alpha)
  * @param ignored_colors_len length of ignored colors array
  * @return A new sprite sheet, NULL on failure
  */
 sprite_sheet* create_sprite_sheet(const char* file_path, SDL_Color* ignored_colors, u32 ignored_colors_len);
+
+/**
+ * Creates a bitmap sprite from a source image.
+ * @param x X position of the sprite
+ * @param y Y Position of the sprite
+ * @param path File path to source image to be loaded.
+ * @return A new sprite, NULL on failure
+ */
+sprite_t* create_sprite_from_img(i32 x, i32 y, const char* path);
 
 /**
  * Update the provided sprite by drawing pixels from the sprite sheet.
@@ -445,7 +454,8 @@ void set_shape_fill(SDL_Color* color);
 void fill_background(SDL_Color* color);
 
 /**
- * Draws a pixel to the screen at the x, y position
+ * Draws a pixel to the screen at the x, y position.\n
+ * This uses an additive alpha to combine colors for alpha \< 255.
  * @param color
  * @param x
  * @param y
@@ -455,15 +465,18 @@ void draw_pixel(SDL_Color* color, i32 x, i32 y);
 /**
  * Draws a sprite to the bitmap.
  * @param sprite
+ * @param scale size to rescale it to.
  */
-void draw_sprite_to_bitmap(sprite_t* sprite);
+void draw_sprite_to_bitmap(sprite_t* sprite, u32 scale);
 
 /**
- * Draw pixels from a given texture into the bitmap
+ * Draw pixels from a given texture into the bitmap (Pixels out of bounds are automatically cropped).
  * Does not necessarily clear the entire bitmap if the width and height of the texture aren't the same as the Bitmap!
- * @param surface
+ * @param surface SDL Surface to draw pixels from.
+ * @param x x coordinate to draw the surface at.
+ * @param y y coordinate to draw the surface at.
  */
-void draw_pixels_from_surface(SDL_Surface* surface);
+void draw_pixels_from_surface(SDL_Surface* surface, i32 x, i32 y);
 
 /**
  * Gets the pixel located in the BITMAP at (x,y) [x and y are not necessarily screen space coordinates, they relate to the bitmap only]

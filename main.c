@@ -18,10 +18,11 @@ struct Circle {
 };
 
 struct Circle circle;
+static sprite_t* button;
 
 SDL_Color A = {0, 0, 0, 255};
-SDL_Color WHITE = {255, 255, 255, 0};
-SDL_Color BROWN = {168, 130, 96, 0};
+SDL_Color WHITE = {255, 255, 255, 255};
+SDL_Color BROWN = {168, 130, 96, 255};
 static u32 speed = 350;
 
 void draw() {
@@ -60,7 +61,10 @@ void draw() {
         circle.color.b += 1;
     }
     if(get_button_state(&global.controller.controllers[0], SDL_CONTROLLER_BUTTON_Y) & CON_HELD){
-        circle.color = (SDL_Color){0};
+        circle.color.a -= 1;
+    }
+    if(get_button_state(&global.controller.controllers[0], SDL_CONTROLLER_BUTTON_START) & CON_HELD){
+        circle.color = (SDL_Color){0,0,0,255};
     }
     if(get_button_state(&global.controller.controllers[0], SDL_CONTROLLER_BUTTON_DPAD_UP) & CON_HELD){
         speed += 1;
@@ -68,7 +72,6 @@ void draw() {
     if(get_button_state(&global.controller.controllers[0], SDL_CONTROLLER_BUTTON_DPAD_DOWN) & CON_HELD){
         speed -= 1;
     }
-
 
     f32 xMag = get_joystick_state(&global.controller.controllers[0], 0, 3200);
     f32 yMag = get_joystick_state(&global.controller.controllers[0], 1, 3200);
@@ -82,7 +85,8 @@ void draw() {
     draw_bitmap();
 
     render_text(NULL, 0, 0, LEFT, "X: %f\nY: %f\nSpeed: %u", circle.x, circle.y, speed)
-    render_text(NULL, 0, 45, LEFT, "RGB: (%u, %u, %u)", circle.color.r, circle.color.g, circle.color.b)
+    render_text(NULL, 0, 45, LEFT, "RGBA: (%u, %u, %u, %u)", circle.color.r, circle.color.g, circle.color.b, circle.color.a)
+    render_text(NULL, 0, 60, LEFT, "Updates: %u\nCalls: %u", global.bitmap.bitmap_updates, global.bitmap.bitmap_calls)
     static char buffer[20];
     snprintf(buffer, 20, "Engine - %u", global.time.frame_rate);
     SDL_SetWindowTitle(global.render.window, buffer);

@@ -45,7 +45,8 @@ void set_shape_fill(SDL_Color* color);
 void fill_background(SDL_Color* color);
 
 /**
- * Draws a pixel to the screen at the x, y position
+ * Draws a pixel to the screen at the x, y position.\n
+ * This uses an additive alpha to combine colors for alpha \< 255.
  * @param color
  * @param x
  * @param y
@@ -55,15 +56,18 @@ void draw_pixel(SDL_Color* color, i32 x, i32 y);
 /**
  * Draws a sprite to the bitmap.
  * @param sprite
+ * @param scale size to rescale it to.
  */
-void draw_sprite_to_bitmap(sprite_t* sprite);
+void draw_sprite_to_bitmap(sprite_t* sprite, u32 scale);
 
 /**
- * Draw pixels from a given texture into the bitmap
+ * Draw pixels from a given texture into the bitmap (Pixels out of bounds are automatically cropped).
  * Does not necessarily clear the entire bitmap if the width and height of the texture aren't the same as the Bitmap!
- * @param surface
+ * @param surface SDL Surface to draw pixels from.
+ * @param x x coordinate to draw the surface at.
+ * @param y y coordinate to draw the surface at.
  */
-void draw_pixels_from_surface(SDL_Surface* surface);
+void draw_pixels_from_surface(SDL_Surface* surface, i32 x, i32 y);
 
 /**
  * Gets the pixel located in the BITMAP at (x,y) [x and y are not necessarily screen space coordinates, they relate to the bitmap only]

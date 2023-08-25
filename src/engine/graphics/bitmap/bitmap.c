@@ -57,47 +57,90 @@ void draw_pixel(SDL_Color* color, i32 x, i32 y){
         return;
 
     //Update the pixel buffer, this does not draw graphics to the screen just yet, we use draw_pixel_buffer() to do that.
-    if(color != NULL && *(u32*)&pixel_buffer[y][x] != *(u32*)color){
-        pixel_buffer[y][x] = *color;
+    if(color != NULL && *(u32*)&pixel_buffer[y][x] != *(u32*)color && color->a > 0){
+        //Alpha blending calculation.
+        if(color->a > 0 && color->a < 255){
+            f32 alpha = color->a / 255.0F;
+            SDL_Color new = {
+                    .r = (color->r * alpha) + ((1-alpha) * pixel_buffer[y][x].r),
+                    .g = (color->g * alpha) + ((1-alpha) * pixel_buffer[y][x].g),
+                    .b = (color->b * alpha) + ((1-alpha) * pixel_buffer[y][x].b),
+                    .a = color->a
+            };
+
+            pixel_buffer[y][x] = new;
+        }
+        else {
+            pixel_buffer[y][x] = *color;
+        }
+
         global.bitmap.bitmap_updates++;
     }
     global.bitmap.bitmap_calls++;
 }
 
-void draw_sprite_to_bitmap(sprite_t* sprite){
-    static bool usable_color = true; //If the color is not ignored, this is true.
-    for(i32 i = 0; i < sprite->height; i++){
-        for(i32 j = 0; j < sprite->width; j++){
-            //Check for ignored colors, TODO: Use a set here!
-            if(sprite->sheet != NULL) {
-                for (i32 k = 0; k < sprite->sheet->ignored_colors_len; k++) {
-                    if (sprite->sprite_data[i][j].r == sprite->sheet->ignored_colors[k].r &&
-                        sprite->sprite_data[i][j].g == sprite->sheet->ignored_colors[k].g &&
-                        sprite->sprite_data[i][j].b == sprite->sheet->ignored_colors[k].b) {
-                        usable_color = false;
-                        break;
+//Used to check if the color is not the denylist for the sprite sheet.
+static bool verify_color(sprite_sheet* sheet, SDL_Color* color){
+    if(sheet == NULL)
+        return true;
+
+    for(i32 k = 0; k < sheet->ignored_colors_len; k++){
+        if (color->r == sheet->ignored_colors[k].r &&
+            color->g == sheet->ignored_colors[k].g &&
+            color->b == sheet->ignored_colors[k].b){
+            return false;
+        }
+    }
+
+    return true;
+}
+
+void draw_sprite_to_bitmap(sprite_t* sprite, u32 scale){
+    //Scale up code.
+    i32 fxs = 0, fxm = 1, fx = 0;
+    i32 fys = 0, fym = 1, fy = 0;
+    if(scale > 1){
+        for (i32 j = 0; j < sprite->height; j++) {
+            fy = fys + j * fym;
+            for (u32 js = 0; js < scale; js++) {
+                for (i32 i = 0; i < sprite->width; i++) {
+                    fx = fxs + i * fxm;
+                    for (u32 is = 0; is < scale; is++) {
+                        if(verify_color(sprite->sheet, &sprite->sprite_data[fy][fx]))
+                            draw_pixel(&sprite->sprite_data[fy][fx], sprite->x + (i * scale) + is, sprite->y + (j * scale) + js);
                     }
                 }
             }
-
-            if(usable_color){
-                draw_pixel(&sprite->sprite_data[i][j], sprite->x + j, sprite->y + i);
+        }
+    }
+    else{
+        fx = fxs;
+        for(i32 i = 0; i < sprite->width; i++, fx += fxm){
+            fy = fys;
+            for(i32 j = 0; j < sprite->height; j++, fy += fym){
+                draw_pixel(&sprite->sprite_data[fy][fx], sprite->x + i, sprite->y + j);
             }
-
-            usable_color = true;
         }
     }
 }
 
-void draw_pixels_from_surface(SDL_Surface* surface){
+void draw_pixels_from_surface(SDL_Surface* surface, i32 x0, i32 y0){
+    static SDL_Surface* temp = NULL;
+    //Need to fix surface format if it's not RGBA.
     u32* current_row;
+    temp = surface;
+    if(surface->format->format != SDL_PIXELFORMAT_RGBA32) {
+        temp = SDL_ConvertSurfaceFormat(surface, SDL_PIXELFORMAT_RGBA32, 0);
+    }
 
-    for(i32 y = 0; y < surface->h; y++){
-        current_row = (u32 *)((u8 *) surface->pixels + y * surface->pitch);
-        for(i32 x = 0; x < surface->w; x++){
-            draw_pixel((SDL_Color*)&current_row[x], x, y);
+    for(i32 y = 0; y < temp->h; y++){
+        current_row = (u32 *)((u8 *) temp->pixels + y * temp->pitch);
+        for(i32 x = 0; x < temp->w; x++){
+            draw_pixel((SDL_Color*)&current_row[x], x + x0, y + y0);
         }
     }
+
+    SDL_FreeSurface(temp);
 }
 
 SDL_Color* get_pixel(u32 x, u32 y){

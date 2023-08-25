@@ -32,9 +32,18 @@ typedef struct Sprite {
 sprite_t* create_sprite(i32 x, i32 y, u32 width, u32 height, sprite_sheet* sheet);
 
 /**
+ * Creates a bitmap sprite from a source image.
+ * @param x X position of the sprite
+ * @param y Y Position of the sprite
+ * @param path File path to source image to be loaded.
+ * @return A new sprite, NULL on failure
+ */
+sprite_t* create_sprite_from_img(i32 x, i32 y, const char* path);
+
+/**
  * Creates a sprite sheet that can be used for multiple sprites to reference
- * @param file_path file path to sprite sheet (currently only PNGs are supported)
- * @param ignored_colors colors to ignore when reading from the sprite sheet
+ * @param file_path file path to sprite sheet
+ * @param ignored_colors colors to ignore when reading from the sprite sheet (not sensitive to alpha)
  * @param ignored_colors_len length of ignored colors array
  * @return A new sprite sheet, NULL on failure
  */
