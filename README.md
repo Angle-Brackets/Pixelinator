@@ -3,7 +3,7 @@
 </p>
 
 <h3 align="center">
-Version 1.2.1
+Version 1.2.4
 </h3>
 
 This is a simple 2D engine written in C using the SDL Library + OpenGL, primarily designed for bitmap graphics,

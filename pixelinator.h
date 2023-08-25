@@ -2,9 +2,10 @@
 #define PIXELINATOR_PIXELINATOR_H
 
 /**
- * UPDATED FOR VERSION 1.2.3
+ * UPDATED FOR VERSION 1.2.4
  *
- * Changelog V.1.2.3: Added functions to resize the window and bitmap at runtime.
+ * Changelog V1.2.4: Alpha blending support, sprites can be scaled, surfaces are easier to manipulate.
+ * Changelog V1.2.3: Added functions to resize the window and bitmap at runtime.
  * Changelog V1.2.2: Hotfix for global.h not being updated.
  * Changelog V1.2.1: Hotfix for initialize function in core.h!
  * Changelog V1.2: Added controller support. Supports most modern controllers and joysticks.
