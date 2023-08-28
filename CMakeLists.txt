@@ -3,9 +3,8 @@ cmake_policy(SET CMP0075 NEW)
 cmake_policy(SET CMP0091 NEW)
 project(Pixelinator VERSION 1.0 DESCRIPTION "A 2D Engine using SDL and C")
 
-set( CMAKE_CXX_STANDARD 11 CACHE STRING "" FORCE )
-set( CMAKE_EXPORT_COMPILE_COMMANDS ON CACHE BOOL "" FORCE )
 #set(CMAKE_OSX_ARCHITECTURES "x86_64") #Build for x86 Darwin
+#set(CMAKE_C_COMPILER emcc)
 
 if(NOT CMAKE_BUILD_TYPE)
     set(CMAKE_BUILD_TYPE Release)

@@ -118,7 +118,9 @@ void draw_sprite_to_bitmap(sprite_t* sprite, u32 scale){
         for(i32 i = 0; i < sprite->width; i++, fx += fxm){
             fy = fys;
             for(i32 j = 0; j < sprite->height; j++, fy += fym){
-                draw_pixel(&sprite->sprite_data[fy][fx], sprite->x + i, sprite->y + j);
+                if(verify_color(sprite->sheet, &sprite->sprite_data[fy][fx])){
+                    draw_pixel(&sprite->sprite_data[fy][fx], sprite->x + i, sprite->y + j);
+                }
             }
         }
     }
