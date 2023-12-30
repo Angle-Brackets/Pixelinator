@@ -1,29 +1,30 @@
 #include <stdio.h>
 #include <stdbool.h>
 #include <SDL.h>
-#include "global.h"
-#include "graphics/bitmap.h"
 #include "graphics/shapes.h"
 #include "text/text.h"
+#include "global.h"
+#include "core/core.h"
 
 #define WIDTH 750
 #define HEIGHT 750
 
+static i32 circle_num = 1;
+static i32 circle_capacity = 2;
+
 struct Circle {
-    f32 x;
-    f32 y;
+    u32 x;
+    u32 y;
     u32 r;
     f32 velocity[2];
     SDL_Color color;
 };
 
-struct Circle circle;
-static sprite_t* button;
+struct Circle* circles;
 
 SDL_Color A = {0, 0, 0, 255};
-SDL_Color WHITE = {255, 255, 255, 255};
-SDL_Color BROWN = {168, 130, 96, 255};
-static u32 speed = 350;
+SDL_Color B = {255, 255, 255, 255};
+SDL_Color C = {255, 0, 0, 255};
 
 void draw() {
     static bool paused = false;
@@ -32,73 +33,107 @@ void draw() {
         exit_program();
     }
 
-    if(get_key_state_str("R") & KS_PRESSED){
-        set_window_size(WIDTH, HEIGHT);
-        resize_bitmap(WIDTH, HEIGHT);
+    if (get_key_state_str("P") & KS_PRESSED) {
+        paused = !paused;
+
+        if(paused)
+            pause_audio();
+        else
+            resume_audio();
+    }
+    static u32 s = 100;
+    static i32 x = 0;
+
+    if(get_key_state_str("Up") & KS_HELD){
+        s += 1;
     }
 
-    if(get_key_state_str("I") & KS_HELD){
-        resize_bitmap(global.render.width + 10, global.render.height + 10);
-        set_window_size(global.render.width + 10, global.render.height + 10);
+    if(get_key_state_str("Down") & KS_HELD){
+        s -= 1;
     }
 
-    if(get_key_state_str("D") & KS_HELD){
-        resize_bitmap(global.render.width - 10, global.render.height - 10);
-        set_window_size(global.render.width - 10, global.render.height - 10);
+    if(get_key_state_str("Left") & KS_HELD){
+        x -=  10;
+    }
 
+    if(get_key_state_str("Right") & KS_HELD){
+        x += 10;
+    }
+
+    if(get_key_state_str("A") & KS_HELD){
+        if(circle_capacity == circle_num){
+            circle_capacity *= 2;
+            circles = (struct Circle*)realloc(circles, sizeof(struct Circle) * circle_capacity);
+        }
+
+        struct Circle c = {
+                .r = random() % 100,
+                .x = random() % WIDTH,
+                .y = random() % HEIGHT,
+                .velocity = {(random() % 10) + 5, (random() % 10) + 5},
+                .color = {random() % 255, random() % 255, random() % 255, 255}
+        };
+
+        circles[circle_num] = c;
+        circle_num++;
+
+        printf("%i circles drawn\n", circle_num);
+    }
+
+    if(get_key_state_str("R") & KS_HELD){
+        if(circle_num > 0) {
+            circles[circle_num--] = (struct Circle) {0};
+            printf("%i circles drawn\n", circle_num);
+        }
     }
 
     //Draw Elements
-    fill_background(&BROWN);
+    fill_background(&B);
 
-    if(get_button_state(&global.controller.controllers[0], SDL_CONTROLLER_BUTTON_A) & CON_HELD){
-        circle.color.r += 1;
-    }
-    if(get_button_state(&global.controller.controllers[0], SDL_CONTROLLER_BUTTON_B) & CON_HELD){
-        circle.color.g += 1;
-    }
-    if(get_button_state(&global.controller.controllers[0], SDL_CONTROLLER_BUTTON_X) & CON_HELD){
-        circle.color.b += 1;
-    }
-    if(get_button_state(&global.controller.controllers[0], SDL_CONTROLLER_BUTTON_Y) & CON_HELD){
-        circle.color.a -= 1;
-    }
-    if(get_button_state(&global.controller.controllers[0], SDL_CONTROLLER_BUTTON_START) & CON_HELD){
-        circle.color = (SDL_Color){0,0,0,255};
-    }
-    if(get_button_state(&global.controller.controllers[0], SDL_CONTROLLER_BUTTON_DPAD_UP) & CON_HELD){
-        speed += 1;
-    }
-    if(get_button_state(&global.controller.controllers[0], SDL_CONTROLLER_BUTTON_DPAD_DOWN) & CON_HELD){
-        speed -= 1;
+    for (i32 i = 0; i < circle_num; i++) {
+        set_shape_fill(&circles[i].color);
+        set_stroke_fill(&circles[i].color);
+        if (!paused) {
+            circles[i].x += circles[i].velocity[0];
+            circles[i].y += circles[i].velocity[1];
+
+            if (circles[i].x <= 0 || circles[i].x >= WIDTH) {
+                circles[i].velocity[0] *= -1;
+            }
+            if (circles[i].y <= 0 || circles[i].y >= HEIGHT) {
+                circles[i].velocity[1] *= -1;
+            }
+        }
+        draw_circle(circles[i].x, circles[i].y, circles[i].r);
+        set_stroke_fill(&A);
     }
 
-    f32 xMag = get_joystick_state(&global.controller.controllers[0], 0, 3200);
-    f32 yMag = get_joystick_state(&global.controller.controllers[0], 1, 3200);
-    circle.x += (xMag / 32767.0F) * global.time.delta * speed;
-    circle.y += (yMag / 32767.0F) * global.time.delta * speed;
-
-    set_stroke_fill(&circle.color);
-    set_shape_fill(&circle.color);
-    draw_circle(circle.x, circle.y, circle.r);
-
+    bitmap_scale(s, s);
+    bitmap_shift(x, 0);
     draw_bitmap();
 
-    render_text(NULL, 0, 0, LEFT, "X: %f\nY: %f\nSpeed: %u", circle.x, circle.y, speed)
-    render_text(NULL, 0, 45, LEFT, "RGBA: (%u, %u, %u, %u)", circle.color.r, circle.color.g, circle.color.b, circle.color.a)
-    render_text(NULL, 0, 60, LEFT, "Updates: %u\nCalls: %u", global.bitmap.bitmap_updates, global.bitmap.bitmap_calls)
+    render_text(NULL, 0, 0, LEFT, "Circles: %i", circle_num)
+
     static char buffer[20];
     snprintf(buffer, 20, "Engine - %u", global.time.frame_rate);
     SDL_SetWindowTitle(global.render.window, buffer);
 }
 
 i32 main(){
-    initialize(WIDTH, HEIGHT, WIDTH, HEIGHT, 120, 15, 4, MULTITHREADING_ENABLED | BITMAP_ACTIVE | IGNORE_FOCUS, 0, draw);
-    set_default_font(load_pix_font("../assets/pixel-emulator-font/PixelEmulator-xq08.ttf", 12, (SDL_Color){255,0,0,255}));
-    circle.color = (SDL_Color){0,0,0,255};
-    circle.r = 15;
-    circle.x = global.render.width / 2;
-    circle.y = global.render.height / 2;
+    initialize(WIDTH, HEIGHT, WIDTH, HEIGHT, 120, 15, 1, MULTITHREADING_ENABLED | BITMAP_ACTIVE | IGNORE_FOCUS, 0, draw);
+    circles = (struct Circle*)malloc(sizeof(struct Circle) * circle_capacity);
+
+    for (i32 i = 0; i < circle_num; i++) {
+        circles[i].r = random() % 100;
+        circles[i].x = random() % WIDTH;
+        circles[i].y = random() % HEIGHT;
+        circles[i].velocity[0] = (random() % 10) + 5;
+        circles[i].velocity[1] = (random() % 10) + 5;
+
+        circles[i].color.r = random() % 255;
+        circles[i].color.g = random() % 255;
+        circles[i].color.b = random() % 255;
+    }
 
     start();
 }

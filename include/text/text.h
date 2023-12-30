@@ -46,7 +46,7 @@ PIX_Font* load_pix_font(const char* font_path, u32 font_size, SDL_Color color);
 bool set_default_font(PIX_Font* font);
 
 /**
- * Returns the default font (mostly for internal use)
+ * Returns the current default font. If no default font is specified then the default system font is used.
  * @return The currently set default font
  */
 PIX_Font* get_default_font();
