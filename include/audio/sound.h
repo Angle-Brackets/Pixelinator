@@ -4,7 +4,6 @@
 #include <SDL.h>
 #include <SDL_mixer.h>
 #include <stdbool.h>
-
 #include "types.h"
 
 #define MAX_STORED_SOUNDS 256

@@ -2,8 +2,9 @@
 #define PIXELINATOR_PIXELINATOR_H
 
 /**
- * UPDATED FOR VERSION 1.2.4
+ * UPDATED FOR VERSION 1.2.5
  *
+ * Changelog V1.2.5: Code cleanup and added the ability for a default font to be searched for when drawing text. Removed glad.
  * Changelog V1.2.4: Alpha blending support, sprites can be scaled, surfaces are easier to manipulate.
  * Changelog V1.2.3: Added functions to resize the window and bitmap at runtime.
  * Changelog V1.2.2: Hotfix for global.h not being updated.

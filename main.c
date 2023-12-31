@@ -9,7 +9,7 @@
 #define WIDTH 750
 #define HEIGHT 750
 
-static i32 circle_num = 1;
+static i32 circle_num = 0;
 static i32 circle_capacity = 2;
 
 struct Circle {
@@ -113,6 +113,7 @@ void draw() {
     draw_bitmap();
 
     render_text(NULL, 0, 0, LEFT, "Circles: %i", circle_num)
+    render_text(NULL, 0, 20, LEFT, "Updates: %u", global.bitmap.bitmap_updates)
 
     static char buffer[20];
     snprintf(buffer, 20, "Engine - %u", global.time.frame_rate);

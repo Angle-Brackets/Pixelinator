@@ -1,7 +1,6 @@
-#include "../../../include/types.h"
 #include "global.h"
-#include "../../../include/util.h"
-#include "../../../include/input/input.h"
+#include "util.h"
+#include "input/input.h"
 
 static const u8* current_state;
 static Key_State* key_states;

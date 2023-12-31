@@ -1,5 +1,5 @@
 #include <SDL.h>
-#include "../include/util.h"
+#include "util.h"
 #include "global.h"
 #include "graphics/pixel_threading.h"
 

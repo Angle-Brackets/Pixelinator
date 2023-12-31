@@ -1,4 +1,4 @@
-#include "../../../../include/graphics/shapes.h"
+#include "graphics/shapes.h"
 #include "global.h"
 
 static void intensify_pixel(i32 x, i32 y, f32 r, SDL_Color* color){

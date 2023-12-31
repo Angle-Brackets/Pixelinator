@@ -1,8 +1,8 @@
 #include <SDL.h>
 
-#include "../../../include/util.h"
+#include "util.h"
 #include "global.h"
-#include "../../../include/render/render.h"
+#include "render/render.h"
 #include "render_internal.h"
 
 void initialize_SDL(const char* name, u32 width, u32 height, Render_Flags flags){
