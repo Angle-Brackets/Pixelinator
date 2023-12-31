@@ -67,10 +67,8 @@ if(CMAKE_THREAD_LIBS_INIT)
 endif()
 
 add_subdirectory("external")
-add_subdirectory(glad/)
 include_directories("include")
 
-
 # Library is generated inside of the cmake-build-debug or release folder!
-target_link_libraries(${APP_EXE} glad Pixelinator)
+target_link_libraries(${APP_EXE} Pixelinator)
 

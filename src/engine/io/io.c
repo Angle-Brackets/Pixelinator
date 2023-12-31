@@ -7,9 +7,8 @@
 #include <errno.h>
 #include <SDL_image.h>
 
-#include "../../../include/types.h"
-#include "../../../include/util.h"
-#include "../../../include/io/io.h"
+#include "util.h"
+#include "io/io.h"
 
 File io_file_read(const char* path){
     File file = {.is_valid = false};
