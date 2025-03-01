@@ -97,10 +97,10 @@ void draw() {
             circles[i].x += circles[i].velocity[0];
             circles[i].y += circles[i].velocity[1];
 
-            if (circles[i].x <= 0 || circles[i].x >= WIDTH) {
+            if (circles[i].x - circles[i].r <= 0 || circles[i].x + circles[i].r >= WIDTH) {
                 circles[i].velocity[0] *= -1;
             }
-            if (circles[i].y <= 0 || circles[i].y >= HEIGHT) {
+            if (circles[i].y - circles[i].r <= 0 || circles[i].y + circles[i].r >= HEIGHT) {
                 circles[i].velocity[1] *= -1;
             }
         }
